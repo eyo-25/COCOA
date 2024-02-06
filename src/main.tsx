@@ -4,9 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 import Layout from "./Layout";
-import MainPage from "./pages/MainPage";
-import CoinDetailPage from "./pages/CoinDetailPage";
-import NewsPage from "./pages/NewsPage";
 
 const router = createBrowserRouter([
   {
@@ -15,15 +12,24 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <MainPage />,
+        lazy: async () => {
+          const MainPage = await import("./pages/MainPage");
+          return { Component: MainPage.default };
+        },
       },
       {
         path: "assets/:coinSymbol",
-        element: <CoinDetailPage />,
+        lazy: async () => {
+          const CoinDetailPage = await import("./pages/CoinDetailPage");
+          return { Component: CoinDetailPage.default };
+        },
       },
       {
         path: "news",
-        element: <NewsPage />,
+        lazy: async () => {
+          const CoinDetailPage = await import("./pages/NewsPage");
+          return { Component: CoinDetailPage.default };
+        },
       },
     ],
   },
