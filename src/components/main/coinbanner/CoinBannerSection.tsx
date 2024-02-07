@@ -1,5 +1,5 @@
 function CoinBannerSection() {
-  return <>CoinBannerSection</>;
+  return <></>;
 }
 
 export default CoinBannerSection;

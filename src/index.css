@@ -5,4 +5,11 @@
 body {
   background-color: #111111;
   color: #757575;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+@layer utilities {
+  .t-menu {
+    font-weight: 500;
+  }
 }

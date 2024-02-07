@@ -1,7 +1,8 @@
-import { render } from "@testing-library/react";
+import { render, RenderOptions } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { ReactElement } from "react";
 
-const customRender = (ui, options) => {
+const customRender = (ui: ReactElement, options?: RenderOptions) => {
   return render(ui, { wrapper: BrowserRouter, ...options });
 };
 
