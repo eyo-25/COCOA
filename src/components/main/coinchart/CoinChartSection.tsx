@@ -8,6 +8,7 @@ import { getChartData } from "@/common/utils/getChartData";
 
 function CoinChartSection() {
   const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
+  const [coinList, setCoinList] = useState<string[]>([]);
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
   const { data, isLoading } = useCoinTrends(menuList[selectedMenuId].url);
 
@@ -17,8 +18,45 @@ function CoinChartSection() {
 
   useEffect(() => {
     if (!data) return;
-    setChartData(getChartData(data));
+
+    const res = getChartData(data);
+    const nameList = res.map((item) => item.Internal);
+    setCoinList(nameList);
+    setChartData(res);
+
+    console.log("a");
   }, [data]);
+
+  useEffect(() => {
+    if (!coinList.length) return;
+
+    const socket = new WebSocket(
+      `wss://streamer.cryptocompare.com/v2?api_key=${
+        import.meta.env.VITE_API_KEY
+      }`
+    );
+
+    socket.onopen = () => {
+      const subscriptions = coinList.map((coin) => `2~Coinbase~${coin}~USD`);
+      const subscriptionMessage = {
+        action: "SubAdd",
+        subs: subscriptions,
+      };
+      socket.send(JSON.stringify(subscriptionMessage));
+    };
+
+    socket.onmessage = (event) => {
+      if (!data) return;
+      const receivedData = JSON.parse(event.data);
+
+      const res = getChartData(data, receivedData);
+      setChartData(res);
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [coinList]);
 
   return (
     <section className="flex flex-col max-w-6xl px-8 mx-auto mt-10 mb-4">
@@ -26,7 +64,7 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      <div className="w-full h-full bg-gray-700 rounded-md px-7">
+      <div className="w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md px-7">
         {isLoading ? (
           <div>Loading...</div>
         ) : (

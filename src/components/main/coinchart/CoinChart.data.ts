@@ -19,27 +19,44 @@ export const menuList = [
   },
 ];
 
+export type PercentType = "OPENHOUR" | "OPEN24HOUR" | "OPENDAY";
+
 export const chartMenuList: ChartMenuType[] = [
-  { type: "Name", label: "암호화 화폐", width: 30, className: "" },
+  { type: "Name", label: "암호화 화폐", width: 24, className: "" },
   {
     type: "PRICE",
     label: "가격",
-    width: 18,
-    className: "justify-end text-gray-100",
+    width: 16,
+    className: "justify-end pr-[15px] text-gray-100",
   },
-  { type: "OPENHOUR", label: "1H", width: 10, className: "justify-center" },
-  { type: "OPEN24HOUR", label: "24H", width: 10, className: "justify-center" },
-  { type: "OPENDAY", label: "1D", width: 10, className: "justify-center" },
+  {
+    type: "OPENHOUR",
+    label: "1H",
+    width: 12,
+    className: "justify-center",
+  },
+  {
+    type: "OPEN24HOUR",
+    label: "24H",
+    width: 12,
+    className: "justify-center",
+  },
+  {
+    type: "OPENDAY",
+    label: "1D",
+    width: 12,
+    className: "justify-center",
+  },
   {
     type: "SUPPLY",
     label: "총 공급량",
-    width: 11,
+    width: 12,
     className: "justify-center text-gray-100",
   },
   {
     type: "MKTCAP",
     label: "시가총액",
-    width: 11,
+    width: 12,
     className: "justify-center text-gray-100",
   },
 ];

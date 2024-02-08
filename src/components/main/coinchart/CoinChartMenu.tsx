@@ -13,7 +13,7 @@ function CoinChartMenu({ selectedMenuId, menuClickHandler }: Props) {
           <li key={title}>
             <button
               onClick={() => menuClickHandler(i)}
-              className={`px-3 py-1 rounded-md font-medium ${
+              className={`px-3 pt-1 pb-[6px] rounded-md font-medium hover:bg-gray-500/50 ${
                 i === selectedMenuId && "bg-green text-black"
               }`}
             >

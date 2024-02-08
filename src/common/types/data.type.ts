@@ -6,7 +6,6 @@ type Coininfo = {
 };
 type Raw = {
   MKTCAP: number;
-  LASTUPDATE: number;
   SUPPLY: number;
   PRICE: number;
   OPENHOUR: number;
@@ -17,7 +16,7 @@ type Raw = {
 export interface CoinDataType {
   CoinInfo: Coininfo;
   RAW?: {
-    KRW: Raw;
+    USD: Raw;
   };
 }
 export interface GetCoinDataType {
@@ -26,20 +25,19 @@ export interface GetCoinDataType {
 export interface CoinFilterdDataType {
   CoinInfo: Coininfo;
   RAW: {
-    KRW: Raw;
+    USD: Raw;
   };
 }
 export interface CoinChartDataType extends Coininfo {
   MKTCAP: string;
-  LASTUPDATE: number;
   SUPPLY: string;
   PRICE: string;
-  OPENHOUR: string;
-  OPEN24HOUR: string;
-  OPENDAY: string;
+  OPENHOUR: number;
+  OPEN24HOUR: number;
+  OPENDAY: number;
 }
 
-type ChartMenu =
+export type ChartMenu =
   | "Name"
   | "PRICE"
   | "OPENHOUR"
@@ -47,9 +45,14 @@ type ChartMenu =
   | "OPENDAY"
   | "SUPPLY"
   | "MKTCAP";
-export type ChartMenuType = {
+export interface ChartMenuType {
   type: ChartMenu;
   label: string;
   width: number;
   className: string;
-};
+}
+
+export interface WebsocketDataType {
+  FROMSYMBOL: string;
+  PRICE: number;
+}

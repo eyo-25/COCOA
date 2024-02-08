@@ -7,7 +7,7 @@ export const useCoinTrends = (trendType: string) => {
       import.meta.env.VITE_BASE_URL +
       "/data/top" +
       trendType +
-      "?limit=30&tsym=KRW&api_key=" +
+      "?limit=25&tsym=USD&api_key=" +
       import.meta.env.VITE_API_KEY
     }`
   );

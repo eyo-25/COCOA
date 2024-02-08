@@ -20,9 +20,9 @@ export const priceFormatter = (price: number) => {
   let res = arr.reverse().join("");
 
   if (arr.length <= 1) {
-    res = "￦" + res + "." + decimalPart.split("").slice(0, 4).join("");
+    res = "$ " + res + "." + decimalPart.split("").slice(0, 4).join("");
   } else {
-    res = "￦" + res + "." + decimalPart.split("").slice(0, 2).join("");
+    res = "$ " + res + "." + decimalPart.split("").slice(0, 2).join("");
   }
 
   // 맨 뒤에 있는 콤마 제거

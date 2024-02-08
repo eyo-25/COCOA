@@ -15,12 +15,7 @@ export const handlers = [
               ImageUrl: "/media/37746251/btc.png",
             },
             RAW: {
-              KRW: {
-                LASTUPDATE: 1707280476,
-              },
-            },
-            DISPLAY: {
-              KRW: {
+              USD: {
                 PRICE: "₩ 58,961,267.4",
                 OPENHOUR: "₩ 58,738,799.3",
                 OPEN24HOUR: "₩ 58,762,053.3",
@@ -39,7 +34,7 @@ export const handlers = [
             },
             RAW: {},
             DISPLAY: {
-              KRW: {
+              USD: {
                 LASTUPDATE: 1707280475,
                 PRICE: "₩ 58,961,267.4",
                 OPENHOUR: "₩ 58,738,799.3",
