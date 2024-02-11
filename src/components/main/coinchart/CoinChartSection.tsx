@@ -9,8 +9,10 @@ import { getChartData } from "@/common/utils/getChartData";
 function CoinChartSection() {
   const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
   const [coinList, setCoinList] = useState<string[]>([]);
+  const [prevCoinList, setPrevCoinList] = useState<string[]>([]);
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
   const { data, isLoading } = useCoinTrends(menuList[selectedMenuId].url);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const menuClickHandler = (id: number) => {
     setSelectedMenuId(id);
@@ -21,42 +23,82 @@ function CoinChartSection() {
 
     const res = getChartData(data);
     const nameList = res.map((item) => item.Internal);
+    setPrevCoinList(coinList);
     setCoinList(nameList);
     setChartData(res);
-
-    console.log("a");
   }, [data]);
 
   useEffect(() => {
     if (!coinList.length) return;
 
-    const socket = new WebSocket(
-      `wss://streamer.cryptocompare.com/v2?api_key=${
-        import.meta.env.VITE_API_KEY
-      }`
-    );
+    if (socket) {
+      const combinedSet = new Set([...prevCoinList, ...coinList]);
+      const combinedArray = Array.from(combinedSet);
 
-    socket.onopen = () => {
-      const subscriptions = coinList.map((coin) => `2~Coinbase~${coin}~USD`);
-      const subscriptionMessage = {
-        action: "SubAdd",
-        subs: subscriptions,
+      const unsubscriptions = prevCoinList
+        .filter((item) => !combinedArray.includes(item))
+        .map((coin) => `2~Coinbase~${coin}~USD`);
+      const newSubscriptions = coinList
+        .filter((item) => !combinedArray.includes(item))
+        .map((coin) => `2~Coinbase~${coin}~USD`);
+
+      console.log(combinedArray);
+      console.log(newSubscriptions.length);
+      console.log(unsubscriptions.length);
+
+      if (0 < unsubscriptions.length) {
+        const unsubscriptionMessage = {
+          action: "SubRemove",
+          subs: unsubscriptions,
+        };
+        socket.send(JSON.stringify(unsubscriptionMessage));
+
+        console.log("동작");
+      }
+
+      if (0 < newSubscriptions.length) {
+        const subscriptionMessage = {
+          action: "SubAdd",
+          subs: newSubscriptions,
+        };
+        socket.send(JSON.stringify(subscriptionMessage));
+
+        console.log("동작2");
+      }
+    } else {
+      const newSocket = new WebSocket(
+        `wss://streamer.cryptocompare.com/v2?api_key=${
+          import.meta.env.VITE_API_KEY
+        }`
+      );
+
+      newSocket.onopen = () => {
+        const subscriptions = coinList.map((coin) => `2~Coinbase~${coin}~USD`);
+        const subscriptionMessage = {
+          action: "SubAdd",
+          subs: subscriptions,
+        };
+        newSocket.send(JSON.stringify(subscriptionMessage));
       };
-      socket.send(JSON.stringify(subscriptionMessage));
-    };
 
-    socket.onmessage = (event) => {
-      if (!data) return;
-      const receivedData = JSON.parse(event.data);
+      newSocket.onmessage = (event) => {
+        if (!data) return;
+        const receivedData = JSON.parse(event.data);
 
-      const res = getChartData(data, receivedData);
-      setChartData(res);
-    };
+        const res = getChartData(data, receivedData);
+        setChartData(res);
+      };
 
-    return () => {
-      socket.close();
-    };
+      setSocket(newSocket);
+    }
   }, [coinList]);
+
+  useEffect(() => {
+    return () => {
+      console.log("언마운트");
+      socket?.close();
+    };
+  }, []);
 
   return (
     <section className="flex flex-col max-w-6xl px-8 mx-auto mt-10 mb-4">
