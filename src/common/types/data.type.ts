@@ -54,5 +54,5 @@ export interface ChartMenuType {
 
 export interface WebsocketDataType {
   FROMSYMBOL: string;
-  PRICE: number;
+  PRICE?: number;
 }

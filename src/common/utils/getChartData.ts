@@ -25,6 +25,7 @@ export const getChartData = (
 
     if (
       exchangeData !== undefined &&
+      exchangeData.PRICE &&
       data.CoinInfo.Internal === exchangeData.FROMSYMBOL
     ) {
       price = exchangeData.PRICE;
