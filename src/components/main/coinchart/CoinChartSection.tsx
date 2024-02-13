@@ -11,7 +11,9 @@ function CoinChartSection() {
   const [prevCoinList, setPrevCoinList] = useState<string[]>([]);
   const [coinList, setCoinList] = useState<string[]>([]);
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
-  const { data, isLoading } = useCoinTrends(menuList[selectedMenuId].url);
+  const { data, isLoading, error } = useCoinTrends(
+    menuList[selectedMenuId].url
+  );
   const socketRef = useRef<WebSocket | null>(null);
 
   const menuClickHandler = (id: number) => {
@@ -100,13 +102,19 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      <div className="w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md px-7">
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <CoinChartBoard chartData={chartData} />
-        )}
-      </div>
+      {error ? (
+        <div>An unexpected error occurred. Please try again later.</div>
+      ) : (
+        <div className="w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md px-7">
+          {isLoading ? (
+            <div>Loading...</div>
+          ) : 0 < chartData.length ? (
+            <CoinChartBoard chartData={chartData} />
+          ) : (
+            <p>데이터가 존재하지 않습니다.</p>
+          )}
+        </div>
+      )}
     </section>
   );
 }
