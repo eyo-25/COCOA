@@ -1,12 +1,12 @@
-import Logo from "@/common/assets/logo.svg?react";
 import { Outlet } from "react-router-dom";
+import Header from "./components/ui/Header";
 
 function Layout() {
   return (
-    <>
-      <Logo />
+    <div>
+      <Header />
       <Outlet />
-    </>
+    </div>
   );
 }
 
