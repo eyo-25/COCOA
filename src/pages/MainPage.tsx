@@ -5,7 +5,7 @@ function MainPage() {
   return (
     <main className="w-full">
       <CoinBannerSection />
-      <CoinChartSection />
+      {/* <CoinChartSection /> */}
     </main>
   );
 }

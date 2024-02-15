@@ -46,4 +46,23 @@ export const handlers = [
       { status: 200 }
     );
   }),
+  http.get(`${import.meta.env.VITE_BASE_URL}/data/v2/:timeType`, () => {
+    return HttpResponse.json(
+      {
+        Data: {
+          Data: [
+            {
+              time: 1707912000,
+              close: 51593.01,
+            },
+            {
+              time: 1707915600,
+              close: 51838.27,
+            },
+          ],
+        },
+      },
+      { status: 200 }
+    );
+  }),
 ];

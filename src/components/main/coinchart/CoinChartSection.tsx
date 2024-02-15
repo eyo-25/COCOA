@@ -16,6 +16,7 @@ function CoinChartSection() {
   const socketRef = useRef<WebSocket | null>(null);
 
   const menuClickHandler = (id: number) => {
+    if (selectedMenuId === id) return;
     setSelectedMenuId(id);
   };
 
@@ -98,7 +99,6 @@ function CoinChartSection() {
   useEffect(() => {
     return () => {
       if (!socketRef.current) return;
-
       socketRef.current.close();
       socketRef.current = null;
     };

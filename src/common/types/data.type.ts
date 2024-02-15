@@ -56,3 +56,21 @@ export interface WebsocketDataType {
   FROMSYMBOL: string;
   PRICE?: number;
 }
+
+export type TimeType = "hour" | "day" | "minute";
+export interface TimeTypeDataType {
+  hour: { type: "histominute"; limit: number; aggregate: number };
+  day: { type: "histoday"; limit: number; aggregate: number };
+  minute: { type: "histominute"; limit: number; aggregate: number };
+}
+
+export interface OHLCVType {
+  time: number;
+  close: number;
+}
+
+export interface OHLCVDataType {
+  Data: {
+    Data: OHLCVType[];
+  };
+}
