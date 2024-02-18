@@ -16,9 +16,9 @@ function CoinBannerSection() {
       return { close, time };
     });
 
-    if (svgRef.current && svgRef2.current) {
-      drawLineGraph(svgRef.current, 800, 400, filteredData);
-      drawBarGraph(svgRef2.current, 800, 80, filteredData);
+    if (svgRef.current) {
+      drawLineGraph(svgRef.current, 800, 300, filteredData);
+      // drawBarGraph(svgRef2.current, 800, 80, filteredData);
     }
   });
 
@@ -27,8 +27,7 @@ function CoinBannerSection() {
       id="coin-banner-section"
       className="flex flex-col max-w-6xl px-8 mx-auto mt-10 mb-4"
     >
-      <svg ref={svgRef} width={800} height={400}></svg>
-      <svg ref={svgRef2} width={800} height={80}></svg>
+      <svg ref={svgRef} width={800} height={300}></svg>
     </section>
   );
 }

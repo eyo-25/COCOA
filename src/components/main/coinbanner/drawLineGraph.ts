@@ -7,6 +7,7 @@ import {
   axisLeft,
   axisBottom,
   pointer,
+  interpolate,
 } from "d3";
 import dayjs from "dayjs";
 
@@ -25,18 +26,23 @@ export function drawLineGraph(
   svgHeight: number,
   data: ChartData[]
 ) {
-  const margin = { top: 20, right: 20, left: 50 };
+  const margin = { top: 10, right: 25, left: 50, bottom: 70 };
 
   // 마진을 제외하고 그래프에서 사용할 넓이
   const width = svgWidth - margin.left - margin.right;
-  const height = svgHeight - margin.top;
+  const height = svgHeight - margin.top - margin.bottom;
+  const barHeight = margin.bottom - 20;
 
   const svg = select(container);
 
   // margin만큼 group이동
-  const group = svg
+  const lineGraphGroup = svg
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+  const barGraphGroup = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${height})`);
 
   const timeDataExtent = extent(data, (d) => new Date(d.time * 1000));
   const closeDataExtent = extent(data, (d) => d.close);
@@ -59,48 +65,47 @@ export function drawLineGraph(
     ])
     .range([height, 0]);
 
+  const yScale2 = scaleLinear()
+    .domain([
+      min - (max - min) * rangePaddingPercentage,
+      max + (max - min) * rangePaddingPercentage,
+    ])
+    .range([barHeight, 0]);
+
   const lineGenerator = line<ChartData>()
     .x((d) => xScale(new Date(d.time * 1000)))
     .y((d) => yScale(d.close));
 
   // Line Chart
-  group
+  lineGraphGroup
     .selectAll(".line")
     .data([data])
     .join("path")
-    .attr("class", "line")
     .attr("d", lineGenerator)
     .attr("fill", "none")
     .attr("stroke", "#E8E8E8")
-    .attr("stroke-width", 1);
-
-  const axisX = axisBottom<Date>(xScale)
-    .ticks(10)
-    .tickFormat((d) => formatTime(d.getTime()));
-
-  // axis x
-  group
-    .append("g")
-    .call(axisX)
-    .attr("transform", `translate(0, ${height})`)
-    .selectAll("text")
-    .style("fill", "#E8E8E8");
+    .attr("stroke-width", 1)
+    .attr("stroke-linejoin", "round")
+    .attr("stroke-linecap", "round")
+    .transition()
+    .duration(1200) // 애니메이션 지속 시간
+    .attrTween("stroke-dasharray", function () {
+      const length = this.getTotalLength();
+      return interpolate(`0,${length}`, `${length},${length}`);
+    });
 
   const axisY = axisLeft<number>(yScale).ticks(5);
 
   // axis y
-  group
+  lineGraphGroup
     .append("g")
     .call(axisY)
     .selectAll("text")
     .style("fill", "#E8E8E8")
     .text((d) => `$ ${d}`);
 
-  // line, tick remove
-  group.selectAll(".domain, .tick line").remove();
-
   // y축선
-  group
+  lineGraphGroup
     .selectAll(".y-grid-line")
     .data(yScale.ticks(5))
     .enter()
@@ -111,17 +116,20 @@ export function drawLineGraph(
     .attr("x2", width)
     .attr("y2", (d) => yScale(d))
     .attr("stroke", "#E8E8E8")
-    .attr("opacity", "0.3")
-    .attr("stroke-width", 0.5);
+    .attr("opacity", "0.2")
+    .attr("stroke-width", 0.4);
 
   // 툴팁
-  const mouseTrackerContainer = group.append("g");
+  const mouseTrackerContainer = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
   mouseTrackerContainer
     .append("rect")
     .attr("width", width)
-    .attr("height", height)
+    .attr("height", svgHeight - 20)
     .attr("fill", "none")
-    .attr("pointer-events", "all"); // 마우스 이벤트 허용
+    .attr("pointer-events", "all");
 
   mouseTrackerContainer
     .on("mouseover", () => {
@@ -132,7 +140,6 @@ export function drawLineGraph(
     })
     .on("mousemove", (event: MouseEvent) => {
       const [x] = pointer(event);
-      mouseTracker.attr("transform", `translate(${x},0)`);
 
       // x 좌표에 해당하는 데이터 찾기
       const invertedX = xScale.invert(x);
@@ -140,15 +147,38 @@ export function drawLineGraph(
 
       // 툴팁 텍스트에 데이터 표시
       if (closestDataPoint) {
-        tooltipText.text(`USDT: ${closestDataPoint.close}`);
+        const xPosition = xScale(new Date(closestDataPoint.time * 1000));
+
+        const tooltipX = xPosition > width / 2 - 50 ? -160 : 0;
+
+        mouseTracker.attr("transform", `translate(${xPosition},0)`);
+
+        a.text(`USDT: ${closestDataPoint.close}`);
+        a2.text(
+          `Time: ${formatTime(
+            new Date(closestDataPoint.time * 1000).getTime()
+          )}`
+        );
         tooltipCircle.attr(
+          "transform",
+          `translate(0,${yScale(closestDataPoint.close)})`
+        );
+        tooltipCircle2.attr(
           "transform",
           `translate(0,${yScale(closestDataPoint.close)})`
         );
         tooltipGroup.attr(
           "transform",
-          `translate(0,${yScale(closestDataPoint.close) - 20})`
+          `translate(${tooltipX},${yScale(closestDataPoint.close) - 20})`
         );
+
+        if (xPosition > width / 2 - 50) {
+          tooltipLeftTail.style("display", "none");
+          tooltipRightTail.style("display", "block");
+        } else {
+          tooltipLeftTail.style("display", "block");
+          tooltipRightTail.style("display", "none");
+        }
       }
     });
 
@@ -160,49 +190,118 @@ export function drawLineGraph(
   const verticalLine = mouseTracker
     .append("line")
     .attr("class", "vertical-line")
-    .attr("stroke", "#00FFA3")
+    .attr("stroke", "#E8E8E8")
     .attr("opacity", "0.5")
     .attr("y1", 0)
-    .attr("y2", height);
+    .attr("y2", height + margin.bottom - 20 - margin.top);
 
   // Circle marker
   const tooltipCircle = mouseTracker
     .append("circle")
     .attr("class", "circle-marker")
+    .attr("r", 7)
+    .attr("fill", "#00FFA3")
+    .attr("opacity", "0.6")
+    .style("filter", "url(#tooltipBlur)");
+
+  const tooltipCircle2 = mouseTracker
+    .append("circle")
+    .attr("class", "circle-marker")
     .attr("r", 3)
     .attr("fill", "#00FFA3");
+
+  // Blur 효과를 정의하는 필터 요소 추가
+  const defs = svg.append("defs");
+
+  const filter = defs
+    .append("filter")
+    .attr("id", "tooltipBlur")
+    .attr("x", "-50%")
+    .attr("y", "-50%")
+    .attr("width", "200%")
+    .attr("height", "200%");
+
+  filter
+    .append("feGaussianBlur")
+    .attr("in", "SourceGraphic")
+    .attr("stdDeviation", 5); // Blur 정도 조절
 
   const tooltipGroup = mouseTracker.append("g");
 
   // 툴팁의 주 본문 (사각형)
   const tooltipRect = tooltipGroup
     .append("rect")
+    .attr("class", "blurs")
     .attr("width", 120)
-    .attr("height", 40)
-    .attr("fill", "white")
-    .attr("opacity", 0.7)
+    .attr("height", 60)
+    .attr("fill", "#E8E8E8")
     .style("padding", "20px")
-    .attr("transform", "translate(19.8, 0)");
+    .attr("transform", "translate(20, -5)")
+    .attr("rx", 2)
+    .attr("ry", 2)
+    .attr("opacity", 0.9);
 
   // 툴팁의 꼬리 (삼각형)
-  tooltipGroup
+  const tooltipLeftTail = tooltipGroup
     .append("polygon")
-    .attr("points", "10,0 0,7.5 10,15")
-    .attr("fill", "white")
-    .attr("opacity", 0.7)
-    .attr("transform", "translate(10, 12.5)"); // 꼬리 위치 조정
+    .attr("points", "20.5,6 11,21 20.5,21")
+    .attr("fill", "#E8E8E8")
+    .attr("opacity", 0.9);
 
-  // 툴팁에 내용 추가
+  //
+  const tooltipRightTail = tooltipGroup
+    .append("polygon")
+    .attr("points", "139.5,6 149,21 139.5,21")
+    .attr("fill", "#E8E8E8")
+    .attr("display", "none")
+    .attr("opacity", 0.9);
+
   const tooltipText = tooltipGroup
     .append("text")
-    .attr("fill", "black")
-    .text(`USDT: 51,787.58`)
-    .attr("x", 120 / 2)
-    .attr("y", 40 / 2)
+    .attr("fill", "#111111")
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
-    .attr("transform", "translate(19.8, 2)")
-    .attr("font-size", "12px");
+    .attr("transform", "translate(80, 5)")
+    .attr("font-size", "12px")
+    .style("font-weight", "500");
+
+  const a = tooltipText.append("tspan").attr("x", 0).attr("dy", "1.1em");
+  const a2 = tooltipText.append("tspan").attr("x", 0).attr("dy", "1.3em");
+
+  // 새로운 그래프를 그리기 위한 준비
+  const barWidth = 10; // 막대그래프의 넓이
+
+  // Bar Chart
+  barGraphGroup
+    .selectAll(".bar")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", (d) => xScale(new Date(d.time * 1000)) - barWidth / 2)
+    .attr("y", barHeight)
+    .attr("width", barWidth)
+    .attr("height", 0)
+    .attr("fill", "#E8E8E8")
+    .transition() // 애니메이션 적용
+    .duration(1000) // 애니메이션 지속 시간
+    .attr("y", (d) => yScale2(d.close))
+    .attr("height", (d) => barHeight - yScale2(d.close));
+
+  const axisX = axisBottom<Date>(xScale)
+    .ticks(10)
+    .tickFormat((d) => formatTime(d.getTime()));
+
+  // line, tick remove
+  svg.selectAll(".domain, .tick line").remove();
+
+  // axis x
+  barGraphGroup
+    .append("g")
+    .call(axisX)
+    .attr("transform", `translate(0, ${barHeight})`)
+    .selectAll("text")
+    .style("fill", "#E8E8E8");
 
   // 다른 그래픽 요소들을 그린 이후에 툴팁을 그립니다.
   mouseTrackerContainer.raise();
@@ -227,8 +326,6 @@ function findClosestDataPoint(
       closestDataPoint = dataPoint;
     }
   }
-
-  console.log(closestDataPoint);
 
   return closestDataPoint;
 }
