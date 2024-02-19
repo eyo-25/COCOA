@@ -74,3 +74,7 @@ export interface OHLCVDataType {
     Data: OHLCVType[];
   };
 }
+
+export type KoreanCoinNameType = {
+  [key: string]: string;
+};

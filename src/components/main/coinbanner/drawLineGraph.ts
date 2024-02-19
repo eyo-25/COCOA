@@ -26,7 +26,7 @@ export function drawLineGraph(
   svgHeight: number,
   data: ChartData[]
 ) {
-  const margin = { top: 10, right: 25, left: 50, bottom: 70 };
+  const margin = { top: 5, right: 25, left: 45, bottom: 50 };
 
   // 마진을 제외하고 그래프에서 사용할 넓이
   const width = svgWidth - margin.left - margin.right;
@@ -94,7 +94,7 @@ export function drawLineGraph(
       return interpolate(`0,${length}`, `${length},${length}`);
     });
 
-  const axisY = axisLeft<number>(yScale).ticks(5);
+  const axisY = axisLeft<number>(yScale).ticks(6);
 
   // axis y
   lineGraphGroup
@@ -107,7 +107,7 @@ export function drawLineGraph(
   // y축선
   lineGraphGroup
     .selectAll(".y-grid-line")
-    .data(yScale.ticks(5))
+    .data(yScale.ticks(6))
     .enter()
     .append("line")
     .attr("class", "y-grid-line")
@@ -187,10 +187,10 @@ export function drawLineGraph(
     .attr("display", "none");
 
   // Vertical line
-  const verticalLine = mouseTracker
+  mouseTracker
     .append("line")
     .attr("class", "vertical-line")
-    .attr("stroke", "#E8E8E8")
+    .attr("stroke", "#00FFA3")
     .attr("opacity", "0.5")
     .attr("y1", 0)
     .attr("y2", height + margin.bottom - 20 - margin.top);
@@ -229,7 +229,7 @@ export function drawLineGraph(
   const tooltipGroup = mouseTracker.append("g");
 
   // 툴팁의 주 본문 (사각형)
-  const tooltipRect = tooltipGroup
+  tooltipGroup
     .append("rect")
     .attr("class", "blurs")
     .attr("width", 120)
@@ -237,8 +237,8 @@ export function drawLineGraph(
     .attr("fill", "#E8E8E8")
     .style("padding", "20px")
     .attr("transform", "translate(20, -5)")
-    .attr("rx", 2)
-    .attr("ry", 2)
+    .attr("rx", 2.5)
+    .attr("ry", 2.5)
     .attr("opacity", 0.9);
 
   // 툴팁의 꼬리 (삼각형)

@@ -1,4 +1,4 @@
-import { ChartMenuType } from "@/common/types/data.type";
+import { ChartMenuType, KoreanCoinNameType } from "@/common/types/data.type";
 
 export const menuList = [
   {
@@ -61,9 +61,21 @@ export const chartMenuList: ChartMenuType[] = [
   },
 ];
 
-type KoreanCoinNameType = {
-  [key: string]: string;
-};
+export const bannerMenuList = [
+  {
+    title: "1 시간",
+  },
+  {
+    title: "24 시간",
+  },
+  {
+    title: "7 시간",
+  },
+  {
+    title: "1 달",
+  },
+];
+
 export const koreanCoinName: KoreanCoinNameType = {
   BTC: "비트코인",
   ETH: "이더리움",

@@ -7,7 +7,7 @@ function Header() {
 
   return (
     <header className="w-full">
-      <div className="flex items-center justify-between max-w-6xl px-8 mx-auto h-14">
+      <div className="flex items-center justify-between max-w-5xl px-8 mx-auto h-14">
         <Link to="/">
           <Logo data-testid="logo" />
         </Link>

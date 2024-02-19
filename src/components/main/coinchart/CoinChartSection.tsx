@@ -28,7 +28,7 @@ function CoinChartSection() {
 
     if (!socketRef.current) {
       const newWebSocket = new WebSocket(
-        `wss://streamer.cryptocompare.com/v2?api_key=${
+        `${import.meta.env.VITE_WEBSOCKET_URL}?api_key=${
           import.meta.env.VITE_API_KEY
         }`
       );
@@ -105,7 +105,7 @@ function CoinChartSection() {
   }, []);
 
   return (
-    <section className="flex flex-col max-w-6xl px-8 mx-auto mt-10 mb-4">
+    <section className="flex flex-col max-w-5xl px-8 mx-auto mt-6 mb-4">
       <CoinChartMenu
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
