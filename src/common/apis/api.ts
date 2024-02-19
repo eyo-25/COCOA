@@ -1,29 +1,21 @@
 import useSWR from "swr";
-import {
-  GetCoinDataType,
-  OHLCVDataType,
-  TimeType,
-  TimeTypeDataType,
-} from "../types/data.type";
-
-const timeTypeList: TimeTypeDataType = {
-  day: { type: "histoday", limit: 7, aggregate: 0 },
-  hour: { type: "histominute", limit: 60, aggregate: 1 },
-  minute: { type: "histominute", limit: 60, aggregate: 0 },
-};
+import { GetCoinDataType, OHLCVDataType, TimeType } from "../types/data.type";
+import { timeTypeList } from "@/components/main/coinchart/CoinChart.data";
 
 export const useCoinOHLCV = (timeType: TimeType, coinInternal: string) => {
+  const { type, limit, aggregate } = timeTypeList[timeType];
+
   const { data, error, isLoading } = useSWR<OHLCVDataType>(
     `${
-      import.meta.env.VITE_BASE_URL +
+      import.meta.env.VITE_API_URL +
       "/data/v2/" +
-      timeTypeList[timeType].type +
+      type +
       "?fsym=" +
       coinInternal +
       "&tsym=USD&limit=" +
-      timeTypeList[timeType].limit +
+      limit +
       "&aggregate=" +
-      timeTypeList[timeType].aggregate +
+      aggregate +
       "&api_key=" +
       import.meta.env.VITE_API_KEY
     }`
@@ -35,7 +27,7 @@ export const useCoinOHLCV = (timeType: TimeType, coinInternal: string) => {
 export const useCoinTrends = (trendType: string) => {
   const { data, error, isLoading } = useSWR<GetCoinDataType>(
     `${
-      import.meta.env.VITE_BASE_URL +
+      import.meta.env.VITE_API_URL +
       "/data/top" +
       trendType +
       "?limit=25&tsym=USD&api_key=" +

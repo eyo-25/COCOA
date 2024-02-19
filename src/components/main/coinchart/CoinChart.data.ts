@@ -1,4 +1,9 @@
-import { ChartMenuType, KoreanCoinNameType } from "@/common/types/data.type";
+import {
+  BannerMenuType,
+  ChartMenuType,
+  KoreanCoinNameType,
+  TimeParamsType,
+} from "@/common/types/data.type";
 
 export const menuList = [
   {
@@ -18,8 +23,6 @@ export const menuList = [
     url: "/volumes",
   },
 ];
-
-export type PercentType = "OPENHOUR" | "OPEN24HOUR" | "OPENDAY";
 
 export const chartMenuList: ChartMenuType[] = [
   { type: "Name", label: "암호화 화폐", width: 24, className: "" },
@@ -61,17 +64,34 @@ export const chartMenuList: ChartMenuType[] = [
   },
 ];
 
-export const bannerMenuList = [
+export const timeTypeList: TimeParamsType = {
+  hour: { type: "histominute", limit: 60, aggregate: 1 },
+  day: { type: "histominute", limit: 144, aggregate: 10 },
+  week: { type: "histohour", limit: 168, aggregate: 1 },
+  month: { type: "histohour", limit: 150, aggregate: 6 },
+};
+export const graphDataList = {
+  hour: { barWidth: 9, dateFormat: "HH:MM" },
+  day: { barWidth: 3, dateFormat: "HH:MM" },
+  week: { barWidth: 2, dateFormat: "YYYY-MM-DD" },
+  month: { barWidth: 2, dateFormat: "YYYY-MM-DD" },
+};
+
+export const bannerMenuList: BannerMenuType[] = [
   {
+    timeType: "hour",
     title: "1 시간",
   },
   {
+    timeType: "day",
     title: "24 시간",
   },
   {
-    title: "7 시간",
+    timeType: "week",
+    title: "7 일",
   },
   {
+    timeType: "month",
     title: "1 달",
   },
 ];
@@ -111,4 +131,5 @@ export const koreanCoinName: KoreanCoinNameType = {
   BCH: "비트코인 캐쉬",
   FIL: "파일코인",
   XMR: "모네로",
+  WLD: "월드코인",
 };

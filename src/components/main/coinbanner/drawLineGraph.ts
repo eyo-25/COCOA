@@ -1,3 +1,4 @@
+import { TimeType } from "@/common/types/data.type";
 import {
   select,
   line,
@@ -8,30 +9,35 @@ import {
   axisBottom,
   pointer,
   interpolate,
+  BaseType,
 } from "d3";
 import dayjs from "dayjs";
+import { graphDataList } from "../coinchart/CoinChart.data";
 
 interface ChartData {
   time: number;
   close: number;
 }
 
-function formatTime(value: number): string {
-  return dayjs(value).format("HH:mm");
+function formatTime(value: number, format: string): string {
+  return dayjs(value).format(format);
 }
 
 export function drawLineGraph(
+  timeType: TimeType,
   container: SVGSVGElement,
   svgWidth: number,
   svgHeight: number,
   data: ChartData[]
 ) {
   const margin = { top: 5, right: 25, left: 45, bottom: 50 };
+  const barWidth = graphDataList[timeType].barWidth;
 
   // 마진을 제외하고 그래프에서 사용할 넓이
   const width = svgWidth - margin.left - margin.right;
   const height = svgHeight - margin.top - margin.bottom;
   const barHeight = margin.bottom - 20;
+  const dateFormat = graphDataList[timeType].dateFormat;
 
   const svg = select(container);
 
@@ -88,11 +94,21 @@ export function drawLineGraph(
     .attr("stroke-linejoin", "round")
     .attr("stroke-linecap", "round")
     .transition()
-    .duration(1200) // 애니메이션 지속 시간
-    .attrTween("stroke-dasharray", function () {
-      const length = this.getTotalLength();
-      return interpolate(`0,${length}`, `${length},${length}`);
-    });
+    .duration(1300) // 애니메이션 지속 시간
+    .attrTween(
+      "stroke-dasharray",
+      function (this: BaseType | SVGPathElement | null) {
+        if (!this || !(this instanceof SVGPathElement)) {
+          return () => "";
+        }
+
+        const length = this.getTotalLength();
+
+        return function (t: number) {
+          return interpolate(`0,${length}`, `${length},${length}`)(t);
+        };
+      }
+    );
 
   const axisY = axisLeft<number>(yScale).ticks(6);
 
@@ -153,12 +169,13 @@ export function drawLineGraph(
 
         mouseTracker.attr("transform", `translate(${xPosition},0)`);
 
-        a.text(`USDT: ${closestDataPoint.close}`);
-        a2.text(
-          `Time: ${formatTime(
-            new Date(closestDataPoint.time * 1000).getTime()
+        a.text(
+          `${formatTime(
+            new Date(closestDataPoint.time * 1000).getTime(),
+            "YYYY-MM-DD, HH:MM"
           )}`
         );
+        a2.text(`USDT: ${closestDataPoint.close}`);
         tooltipCircle.attr(
           "transform",
           `translate(0,${yScale(closestDataPoint.close)})`
@@ -258,18 +275,24 @@ export function drawLineGraph(
 
   const tooltipText = tooltipGroup
     .append("text")
-    .attr("fill", "#111111")
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
     .attr("transform", "translate(80, 5)")
-    .attr("font-size", "12px")
     .style("font-weight", "500");
 
-  const a = tooltipText.append("tspan").attr("x", 0).attr("dy", "1.1em");
-  const a2 = tooltipText.append("tspan").attr("x", 0).attr("dy", "1.3em");
-
-  // 새로운 그래프를 그리기 위한 준비
-  const barWidth = 10; // 막대그래프의 넓이
+  const a = tooltipText
+    .append("tspan")
+    .attr("x", 0)
+    .attr("dy", "1.2em")
+    .attr("font-size", "10px")
+    .attr("fill", "#626262");
+  const a2 = tooltipText
+    .append("tspan")
+    .attr("x", 0)
+    .attr("dy", "1.4em")
+    .attr("font-size", "12px")
+    .attr("font-weight", 700)
+    .attr("fill", "#111111");
 
   // Bar Chart
   barGraphGroup
@@ -284,16 +307,16 @@ export function drawLineGraph(
     .attr("height", 0)
     .attr("fill", "#E8E8E8")
     .transition() // 애니메이션 적용
-    .duration(1000) // 애니메이션 지속 시간
+    .duration(1300) // 애니메이션 지속 시간
     .attr("y", (d) => yScale2(d.close))
     .attr("height", (d) => barHeight - yScale2(d.close));
 
   const axisX = axisBottom<Date>(xScale)
-    .ticks(10)
-    .tickFormat((d) => formatTime(d.getTime()));
+    .ticks(7)
+    .tickFormat((d) => formatTime(d.getTime(), dateFormat));
 
   // line, tick remove
-  svg.selectAll(".domain, .tick line").remove();
+  lineGraphGroup.selectAll(".domain, .tick line").remove();
 
   // axis x
   barGraphGroup
@@ -302,6 +325,8 @@ export function drawLineGraph(
     .attr("transform", `translate(0, ${barHeight})`)
     .selectAll("text")
     .style("fill", "#E8E8E8");
+
+  barGraphGroup.selectAll(".domain").remove();
 
   // 다른 그래픽 요소들을 그린 이후에 툴팁을 그립니다.
   mouseTrackerContainer.raise();

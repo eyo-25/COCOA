@@ -1,7 +1,7 @@
 import { HttpResponse, http } from "msw";
 
 export const handlers = [
-  http.get(`${import.meta.env.VITE_BASE_URL}/data/top/:coinTrends`, () => {
+  http.get(`${import.meta.env.VITE_API_URL}/data/top/:coinTrends`, () => {
     return HttpResponse.json(
       {
         Data: [
@@ -46,7 +46,7 @@ export const handlers = [
       { status: 200 }
     );
   }),
-  http.get(`${import.meta.env.VITE_BASE_URL}/data/v2/:timeType`, () => {
+  http.get(`${import.meta.env.VITE_API_URL}/data/v2/:timeType`, () => {
     return HttpResponse.json(
       {
         Data: {

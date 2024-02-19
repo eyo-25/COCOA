@@ -3,12 +3,20 @@ import CoinChartBoard from "./CoinChartBoard";
 import CoinChartMenu from "./CoinChartMenu";
 import { useCoinTrends } from "@/common/apis/api";
 import { menuList } from "./CoinChart.data";
-import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
+import {
+  CoinChartDataType,
+  CoininfoType,
+  WebsocketDataType,
+} from "@/common/types/data.type";
 import { getChartData } from "@/common/utils/getChartData";
 
-function CoinChartSection() {
+type Props = {
+  coinList: CoininfoType[];
+  setCoinList: React.Dispatch<React.SetStateAction<CoininfoType[]>>;
+};
+
+function CoinChartSection({ coinList, setCoinList }: Props) {
   const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
-  const [coinList, setCoinList] = useState<string[]>([]);
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
   const { data, isLoading, error } = useCoinTrends(
     menuList[selectedMenuId].url
@@ -24,7 +32,11 @@ function CoinChartSection() {
     if (!data) return;
 
     const res = getChartData(data);
-    const nameList = res.map((item) => item.Internal);
+    const coinInfoList = res.map((item) => {
+      const { Id, ImageUrl, Internal, FullName } = item;
+      return { Id, ImageUrl, Internal, FullName };
+    });
+    const nameList = coinInfoList.map((item) => item.Internal);
 
     if (!socketRef.current) {
       const newWebSocket = new WebSocket(
@@ -34,7 +46,9 @@ function CoinChartSection() {
       );
 
       newWebSocket.onopen = () => {
-        const subscriptions = nameList.map((coin) => `2~Coinbase~${coin}~USD`);
+        const subscriptions = coinInfoList.map(
+          ({ Internal }) => `2~Coinbase~${Internal}~USD`
+        );
         const subscriptionMessage = {
           action: "SubAdd",
           subs: subscriptions,
@@ -54,10 +68,12 @@ function CoinChartSection() {
 
       socketRef.current = newWebSocket;
     } else if (socketRef.current.readyState === WebSocket.OPEN) {
-      const commonArr = coinList.filter((item) => nameList.includes(item));
+      const commonArr = coinList
+        .filter((item) => nameList.includes(item.Internal))
+        .map((item) => item.Internal);
 
       const unsubscriptions = coinList
-        .filter((item) => !commonArr.includes(item))
+        .filter((item) => !commonArr.includes(item.Internal))
         .map((coin) => `2~Coinbase~${coin}~USD`);
       const newSubscriptions = nameList
         .filter((item) => !commonArr.includes(item))
@@ -93,7 +109,7 @@ function CoinChartSection() {
     }
 
     setChartData(res);
-    setCoinList(nameList);
+    setCoinList(coinInfoList);
   }, [data]);
 
   useEffect(() => {

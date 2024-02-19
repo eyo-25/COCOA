@@ -6,7 +6,7 @@ import { server } from "@/setupTests";
 
 test("handler 에러 테스트", async () => {
   server.resetHandlers(
-    http.get(`${import.meta.env.VITE_BASE_URL}/data/top/:coinTrends`, () => {
+    http.get(`${import.meta.env.VITE_API_URL}/data/top/:coinTrends`, () => {
       return new HttpResponse(null, { status: 500 });
     })
   );
@@ -23,7 +23,7 @@ test("handler 에러 테스트", async () => {
 
 test("빈 데이터 테스트", async () => {
   server.resetHandlers(
-    http.get(`${import.meta.env.VITE_BASE_URL}/data/top/:coinTrends`, () => {
+    http.get(`${import.meta.env.VITE_API_URL}/data/top/:coinTrends`, () => {
       return HttpResponse.json(
         {
           Data: [],

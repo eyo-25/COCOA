@@ -12,7 +12,7 @@ function CoinChartBoard({ chartData }: Props) {
       <div className="flex items-center ml-2">
         <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full">
           <img
-            src={`https://www.cryptocompare.com/${coin.ImageUrl}`}
+            src={import.meta.env.VITE_BASE_URL + coin.ImageUrl}
             alt={coin.FullName}
           />
         </div>

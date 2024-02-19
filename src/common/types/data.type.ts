@@ -1,10 +1,10 @@
-type Coininfo = {
+export type CoininfoType = {
   Id: string;
   FullName: string;
   Internal: string;
   ImageUrl: string;
 };
-type Raw = {
+type RawType = {
   MKTCAP: number;
   SUPPLY: number;
   PRICE: number;
@@ -14,21 +14,21 @@ type Raw = {
 };
 
 export interface CoinDataType {
-  CoinInfo: Coininfo;
+  CoinInfo: CoininfoType;
   RAW?: {
-    USD: Raw;
+    USD: RawType;
   };
 }
 export interface GetCoinDataType {
   Data: CoinDataType[];
 }
 export interface CoinFilterdDataType {
-  CoinInfo: Coininfo;
+  CoinInfo: CoininfoType;
   RAW: {
-    USD: Raw;
+    USD: RawType;
   };
 }
-export interface CoinChartDataType extends Coininfo {
+export interface CoinChartDataType extends CoininfoType {
   MKTCAP: string;
   SUPPLY: string;
   PRICE: string;
@@ -57,18 +57,24 @@ export interface WebsocketDataType {
   PRICE?: number;
 }
 
-export type TimeType = "hour" | "day" | "minute";
-export interface TimeTypeDataType {
-  hour: { type: "histominute"; limit: number; aggregate: number };
-  day: { type: "histoday"; limit: number; aggregate: number };
-  minute: { type: "histominute"; limit: number; aggregate: number };
+export type TimeType = "hour" | "day" | "week" | "month";
+type TimeHistory = "histominute" | "histohour";
+export type TimeParamsType = {
+  [K in TimeType]: {
+    type: TimeHistory;
+    limit: number;
+    aggregate: number;
+  };
+};
+export interface BannerMenuType {
+  timeType: TimeType;
+  title: string;
 }
 
 export interface OHLCVType {
   time: number;
   close: number;
 }
-
 export interface OHLCVDataType {
   Data: {
     Data: OHLCVType[];
@@ -78,3 +84,5 @@ export interface OHLCVDataType {
 export type KoreanCoinNameType = {
   [key: string]: string;
 };
+
+export type PercentType = "OPENHOUR" | "OPEN24HOUR" | "OPENDAY";
