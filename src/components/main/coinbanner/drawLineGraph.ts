@@ -1,4 +1,4 @@
-import { TimeType } from "@/common/types/data.type";
+import { OHLCVType, TimeType } from "@/common/types/data.type";
 import {
   select,
   line,
@@ -13,18 +13,14 @@ import {
 } from "d3";
 import { graphDataList } from "../coinchart/CoinChart.data";
 import { formatTime } from "@/common/utils/formatTime";
-
-interface ChartData {
-  time: number;
-  close: number;
-}
+import { findClosestDataPoint } from "@/common/utils/findClosestDataPoint";
 
 export function drawLineGraph(
   timeType: TimeType,
   container: SVGSVGElement,
   svgWidth: number,
   svgHeight: number,
-  data: ChartData[]
+  data: OHLCVType[]
 ) {
   const svg = select(container);
 
@@ -56,7 +52,7 @@ export function drawLineGraph(
     .domain([closeMin - yScalePadding, closeMax + yScalePadding])
     .range([height, 0]);
 
-  const lineGenerator = line<ChartData>()
+  const lineGenerator = line<OHLCVType>()
     .x((d) => xScale(new Date(d.time * 1000)))
     .y((d) => yScale(d.close));
   lineGraphGroup
@@ -175,7 +171,7 @@ export function drawLineGraph(
     .attr("fill", "#00FFA3")
     .attr("opacity", "0.6")
     .style("filter", "url(#tooltipBlur)");
-  const tooltipCircle2 = tooltipContainer
+  const tooltipHighLight = tooltipContainer
     .append("circle")
     .attr("class", "circle-marker")
     .attr("r", 3)
@@ -212,7 +208,6 @@ export function drawLineGraph(
     .attr("points", "20.5,6 11,21 20.5,21")
     .attr("fill", "#E8E8E8")
     .attr("opacity", 0.9);
-
   const tooltipRightTail = tooltipGroup
     .append("polygon")
     .attr("points", "139.5,6 149,21 139.5,21")
@@ -226,7 +221,6 @@ export function drawLineGraph(
     .attr("dominant-baseline", "middle")
     .attr("transform", "translate(80, 5)")
     .style("font-weight", "500");
-
   const tooltipTopText = tooltipText
     .append("tspan")
     .attr("x", 0)
@@ -252,71 +246,32 @@ export function drawLineGraph(
     })
     .on("mousemove", (event: MouseEvent) => {
       const [x] = pointer(event);
-
-      // x 좌표에 해당하는 데이터 찾기
       const invertedX = xScale.invert(x);
-      const closestDataPoint = findClosestDataPoint(invertedX, data);
+      const { close, time } = findClosestDataPoint(invertedX, data);
+      const xPosition = xScale(new Date(time * 1000));
+      const isLeftPosition = xPosition > width / 2;
 
-      // 툴팁 텍스트에 데이터 표시
-      if (closestDataPoint) {
-        const xPosition = xScale(new Date(closestDataPoint.time * 1000));
+      tooltipContainer.attr("transform", `translate(${xPosition},0)`);
+      tooltipCircle.attr("transform", `translate(0,${yScale(close)})`);
+      tooltipHighLight.attr("transform", `translate(0,${yScale(close)})`);
 
-        const tooltipX = xPosition > width / 2 - 50 ? -160 : 0;
+      tooltipTopText.text(
+        `${formatTime(new Date(time * 1000).getTime(), "YYYY-MM-DD, HH:MM")}`
+      );
+      tooltipBottomText.text(`USDT: ${close}`);
 
-        tooltipContainer.attr("transform", `translate(${xPosition},0)`);
-
-        tooltipTopText.text(
-          `${formatTime(
-            new Date(closestDataPoint.time * 1000).getTime(),
-            "YYYY-MM-DD, HH:MM"
-          )}`
-        );
-        tooltipBottomText.text(`USDT: ${closestDataPoint.close}`);
-        tooltipCircle.attr(
-          "transform",
-          `translate(0,${yScale(closestDataPoint.close)})`
-        );
-        tooltipCircle2.attr(
-          "transform",
-          `translate(0,${yScale(closestDataPoint.close)})`
-        );
-        tooltipGroup.attr(
-          "transform",
-          `translate(${tooltipX},${
-            yScale(closestDataPoint.close) - axisXHeight
-          })`
-        );
-
-        if (xPosition > width / 2 - 50) {
-          tooltipLeftTail.style("display", "none");
-          tooltipRightTail.style("display", "block");
-        } else {
-          tooltipLeftTail.style("display", "block");
-          tooltipRightTail.style("display", "none");
-        }
+      tooltipGroup.attr(
+        "transform",
+        `translate(${isLeftPosition ? -160 : 0},${yScale(close) - axisXHeight})`
+      );
+      if (isLeftPosition) {
+        tooltipLeftTail.style("display", "none");
+        tooltipRightTail.style("display", "block");
+      } else {
+        tooltipLeftTail.style("display", "block");
+        tooltipRightTail.style("display", "none");
       }
     });
 }
 
 export default drawLineGraph;
-
-// x 좌표에 가장 가까운 데이터 포인트 찾기
-function findClosestDataPoint(
-  x: Date,
-  data: ChartData[]
-): ChartData | undefined {
-  let closestDataPoint: ChartData | undefined;
-  let closestDistance = Number.MAX_VALUE;
-
-  for (const dataPoint of data) {
-    const distance = Math.abs(
-      x.getTime() - new Date(dataPoint.time * 1000).getTime()
-    );
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      closestDataPoint = dataPoint;
-    }
-  }
-
-  return closestDataPoint;
-}
