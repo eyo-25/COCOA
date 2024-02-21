@@ -24,13 +24,15 @@ export const useCoinOHLCV = (timeType: TimeType, coinInternal: string) => {
   return { data, isLoading, error };
 };
 
-export const useCoinTrends = (trendType: string) => {
+export const useCoinTrends = (trendType: string, limit: number = 25) => {
   const { data, error, isLoading } = useSWR<GetCoinDataType>(
     `${
       import.meta.env.VITE_API_URL +
       "/data/top" +
       trendType +
-      "?limit=25&tsym=USD&api_key=" +
+      "?limit=" +
+      limit +
+      "&tsym=USD&api_key=" +
       import.meta.env.VITE_API_KEY
     }`
   );

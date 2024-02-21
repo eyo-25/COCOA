@@ -58,9 +58,9 @@ export interface WebsocketDataType {
 }
 
 export type TimeType = "hour" | "day" | "week" | "month";
-type TimeHistory = "histominute" | "histohour";
+export type TimeHistory = "histominute" | "histohour";
 export type TimeParamsType = {
-  [K in TimeType]: {
+  [Key in TimeType]: {
     type: TimeHistory;
     limit: number;
     aggregate: number;

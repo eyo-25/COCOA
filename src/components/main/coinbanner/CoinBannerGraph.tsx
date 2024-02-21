@@ -16,13 +16,14 @@ function CoinBannerGraph({ displayCoin }: Props) {
   );
   const svgRef = useRef(null);
 
-  const menuClickHandler = (timeType: TimeType) => {
+  const menuClickHandler = async (timeType: TimeType) => {
     if (selectedMenuType === timeType) return;
     setSelectedMenuType(timeType);
   };
 
   useEffect(() => {
     if (!data) return;
+    console.log("데이터 변경");
 
     const filteredData = data.Data.Data.map((item) => {
       const { close, time } = item;
@@ -68,7 +69,9 @@ function CoinBannerGraph({ displayCoin }: Props) {
         </ul>
         {error && <p>An unexpected error occurred. Please try again later.</p>}
         {isLoading && <p>isLoading...</p>}
-        {data && <svg ref={svgRef} width={780} height={220}></svg>}
+        {!isLoading && data && (
+          <svg ref={svgRef} viewBox={`0 0 ${780} ${220}`}></svg>
+        )}
       </div>
     </>
   );

@@ -18,10 +18,6 @@ export const menuList = [
     title: "최근 거래량",
     url: "/totalvolfull",
   },
-  {
-    title: "총 거래량",
-    url: "/volumes",
-  },
 ];
 
 export const chartMenuList: ChartMenuType[] = [
