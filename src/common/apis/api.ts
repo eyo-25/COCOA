@@ -1,11 +1,15 @@
 import useSWR from "swr";
 import { GetCoinDataType, OHLCVDataType, TimeType } from "../types/data.type";
 import { timeTypeList } from "@/components/main/coinchart/CoinChart.data";
+import axios from "axios";
 
-export const useCoinOHLCV = (timeType: TimeType, coinInternal: string) => {
+export const fetchOHLCVData = async (
+  timeType: TimeType,
+  coinInternal: string
+) => {
   const { type, limit, aggregate } = timeTypeList[timeType];
 
-  const { data, error, isLoading } = useSWR<OHLCVDataType>(
+  const res = await axios.get<OHLCVDataType>(
     `${
       import.meta.env.VITE_API_URL +
       "/data/v2/" +
@@ -21,7 +25,12 @@ export const useCoinOHLCV = (timeType: TimeType, coinInternal: string) => {
     }`
   );
 
-  return { data, isLoading, error };
+  const filteredData = res.data.Data.Data.map((item) => {
+    const { close, time } = item;
+    return { close, time };
+  });
+
+  return filteredData;
 };
 
 export const useCoinTrends = (trendType: string, limit: number = 25) => {

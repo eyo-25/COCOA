@@ -1,4 +1,4 @@
-import Logo from "@/common/assets/logo.svg?react";
+import { Logo } from "@/common/assets";
 import { Link, useLocation } from "react-router-dom";
 
 function Header() {

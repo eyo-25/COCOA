@@ -17,13 +17,14 @@ import { findClosestDataPoint } from "@/common/utils/findClosestDataPoint";
 
 export function drawLineGraph(
   timeType: TimeType,
-  container: SVGSVGElement,
+  container: SVGSVGElement | null,
   svgWidth: number,
   svgHeight: number,
   data: OHLCVType[]
 ) {
+  if (!container) return;
   const svg = select(container);
-  svg.selectAll("*").remove();
+  // svg.selectAll("*").remove();
 
   const margin = { top: 5, right: 25, left: 45, bottom: 50 };
   const axisXHeight = 20;
@@ -83,17 +84,21 @@ export function drawLineGraph(
       }
     );
 
-  const axisY = axisLeft<number>(yScale).ticks(6);
+  const axisY = axisLeft<number>(yScale)
+    .ticks(4)
+    .tickFormat((d) => {
+      const formattedValue = d % 1 === 0 ? d : d.toFixed(3);
+      return `$ ${formattedValue}`;
+    });
   lineGraphGroup
     .append("g")
     .call(axisY)
     .selectAll("text")
-    .style("fill", "#E8E8E8")
-    .text((d) => `$ ${d}`);
+    .style("fill", "#E8E8E8");
 
   lineGraphGroup
     .selectAll(".y-grid-line")
-    .data(yScale.ticks(6))
+    .data(yScale.ticks(4))
     .enter()
     .append("line")
     .attr("class", "y-grid-line")
@@ -146,6 +151,7 @@ export function drawLineGraph(
   const mouseTrackerGroup = svg
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
   mouseTrackerGroup
     .append("rect")
     .attr("width", width)
@@ -239,13 +245,11 @@ export function drawLineGraph(
   mouseTrackerGroup.raise();
 
   mouseTrackerGroup
-    .on("mouseover", () => {
-      tooltipContainer.style("display", "block");
-    })
     .on("mouseleave", () => {
       tooltipContainer.style("display", "none");
     })
     .on("mousemove", (event: MouseEvent) => {
+      tooltipContainer.style("display", "block");
       const [x] = pointer(event);
       const invertedX = xScale.invert(x);
       const { close, time } = findClosestDataPoint(invertedX, data);
