@@ -1,10 +1,10 @@
-type Coininfo = {
+export type CoininfoType = {
   Id: string;
   FullName: string;
   Internal: string;
   ImageUrl: string;
 };
-type Raw = {
+type RawType = {
   MKTCAP: number;
   SUPPLY: number;
   PRICE: number;
@@ -13,22 +13,40 @@ type Raw = {
   OPENDAY: number;
 };
 
+export interface CoinDetailDataType {
+  Data: {
+    CoinInfo: CoininfoType;
+    AggregatedData: RawType;
+  };
+}
+export interface CoinDetailInfoType {
+  coinInfo: CoininfoType;
+  coinDetail: {
+    MKTCAP: number;
+    SUPPLY: number;
+    PRICE: string;
+    OPENHOUR: number;
+    OPEN24HOUR: number;
+    OPENDAY: number;
+  };
+}
+
 export interface CoinDataType {
-  CoinInfo: Coininfo;
+  CoinInfo: CoininfoType;
   RAW?: {
-    USD: Raw;
+    USD: RawType;
   };
 }
 export interface GetCoinDataType {
   Data: CoinDataType[];
 }
 export interface CoinFilterdDataType {
-  CoinInfo: Coininfo;
+  CoinInfo: CoininfoType;
   RAW: {
-    USD: Raw;
+    USD: RawType;
   };
 }
-export interface CoinChartDataType extends Coininfo {
+export interface CoinChartDataType extends CoininfoType {
   MKTCAP: string;
   SUPPLY: string;
   PRICE: string;
@@ -51,8 +69,42 @@ export interface ChartMenuType {
   width: number;
   className: string;
 }
+export interface MenuType {
+  title: string;
+  url: string;
+}
 
 export interface WebsocketDataType {
   FROMSYMBOL: string;
   PRICE?: number;
 }
+
+export type TimeType = "hour" | "day" | "week" | "month";
+export type TimeHistory = "histominute" | "histohour";
+export type TimeParamsType = {
+  [Key in TimeType]: {
+    type: TimeHistory;
+    limit: number;
+    aggregate: number;
+  };
+};
+export interface GraphMenuType {
+  timeType: TimeType;
+  title: string;
+}
+
+export interface OHLCVType {
+  time: number;
+  close: number;
+}
+export interface OHLCVDataType {
+  Data: {
+    Data: OHLCVType[];
+  };
+}
+
+export type KoreanCoinNameType = {
+  [key: string]: string;
+};
+
+export type PercentType = "OPENHOUR" | "OPEN24HOUR" | "OPENDAY";

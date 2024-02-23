@@ -1,4 +1,9 @@
-import { ChartMenuType } from "@/common/types/data.type";
+import {
+  GraphMenuType,
+  ChartMenuType,
+  KoreanCoinNameType,
+  TimeParamsType,
+} from "@/common/types/data.type";
 
 export const menuList = [
   {
@@ -13,13 +18,21 @@ export const menuList = [
     title: "최근 거래량",
     url: "/totalvolfull",
   },
+];
+export const detailMenuList = [
   {
-    title: "총 거래량",
-    url: "/volumes",
+    title: "시세차트",
+    url: "/exchanges",
+  },
+  {
+    title: "프로필",
+    url: "/",
+  },
+  {
+    title: "관련 뉴스",
+    url: "/",
   },
 ];
-
-export type PercentType = "OPENHOUR" | "OPEN24HOUR" | "OPENDAY";
 
 export const chartMenuList: ChartMenuType[] = [
   { type: "Name", label: "암호화 화폐", width: 24, className: "" },
@@ -61,9 +74,38 @@ export const chartMenuList: ChartMenuType[] = [
   },
 ];
 
-type KoreanCoinNameType = {
-  [key: string]: string;
+export const timeTypeList: TimeParamsType = {
+  hour: { type: "histominute", limit: 60, aggregate: 1 },
+  day: { type: "histominute", limit: 144, aggregate: 10 },
+  week: { type: "histohour", limit: 168, aggregate: 1 },
+  month: { type: "histohour", limit: 150, aggregate: 6 },
 };
+export const graphDataList = {
+  hour: { barWidth: 9, dateFormat: "HH:MM" },
+  day: { barWidth: 3, dateFormat: "HH:MM" },
+  week: { barWidth: 2, dateFormat: "YYYY-MM-DD" },
+  month: { barWidth: 2, dateFormat: "YYYY-MM-DD" },
+};
+
+export const graphMenuList: GraphMenuType[] = [
+  {
+    timeType: "hour",
+    title: "1 시간",
+  },
+  {
+    timeType: "day",
+    title: "24 시간",
+  },
+  {
+    timeType: "week",
+    title: "7 일",
+  },
+  {
+    timeType: "month",
+    title: "1 달",
+  },
+];
+
 export const koreanCoinName: KoreanCoinNameType = {
   BTC: "비트코인",
   ETH: "이더리움",
@@ -99,4 +141,5 @@ export const koreanCoinName: KoreanCoinNameType = {
   BCH: "비트코인 캐쉬",
   FIL: "파일코인",
   XMR: "모네로",
+  WLD: "월드코인",
 };

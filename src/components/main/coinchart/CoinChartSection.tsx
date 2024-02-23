@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import CoinChartBoard from "./CoinChartBoard";
-import CoinChartMenu from "./CoinChartMenu";
+import CoinChartMenu from "../../ui/CoinChartMenu";
 import { useCoinTrends } from "@/common/apis/api";
 import { menuList } from "./CoinChart.data";
 import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
@@ -8,7 +8,6 @@ import { getChartData } from "@/common/utils/getChartData";
 
 function CoinChartSection() {
   const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
-  const [prevCoinList, setPrevCoinList] = useState<string[]>([]);
   const [coinList, setCoinList] = useState<string[]>([]);
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
   const { data, isLoading, error } = useCoinTrends(
@@ -17,6 +16,7 @@ function CoinChartSection() {
   const socketRef = useRef<WebSocket | null>(null);
 
   const menuClickHandler = (id: number) => {
+    if (selectedMenuId === id) return;
     setSelectedMenuId(id);
   };
 
@@ -25,36 +25,41 @@ function CoinChartSection() {
 
     const res = getChartData(data);
     const nameList = res.map((item) => item.Internal);
-    if (0 < coinList.length) {
-      setPrevCoinList(coinList);
-    }
-    setChartData(res);
-    setCoinList(nameList);
-  }, [data]);
 
-  useEffect(() => {
-    socketRef.current = new WebSocket(
-      `wss://streamer.cryptocompare.com/v2?api_key=${
-        import.meta.env.VITE_API_KEY
-      }`
-    );
+    if (!socketRef.current) {
+      const newWebSocket = new WebSocket(
+        `${import.meta.env.VITE_WEBSOCKET_URL}?api_key=${
+          import.meta.env.VITE_API_KEY
+        }`
+      );
 
-    return () => {
-      if (!socketRef.current) return;
-      socketRef.current.close();
-    };
-  }, [socketRef]);
+      newWebSocket.onopen = () => {
+        const subscriptions = nameList.map((coin) => `2~Coinbase~${coin}~USD`);
+        const subscriptionMessage = {
+          action: "SubAdd",
+          subs: subscriptions,
+        };
+        newWebSocket.send(JSON.stringify(subscriptionMessage));
+      };
 
-  useEffect(() => {
-    if (!socketRef.current) return;
+      newWebSocket.onmessage = (event) => {
+        if (!data) return;
+        const receivedData: WebsocketDataType = JSON.parse(event.data);
 
-    if (0 < prevCoinList.length) {
-      const commonArr = prevCoinList.filter((item) => coinList.includes(item));
+        if (!receivedData.PRICE) return;
 
-      const unsubscriptions = prevCoinList
+        const res = getChartData(data, receivedData);
+        setChartData(res);
+      };
+
+      socketRef.current = newWebSocket;
+    } else if (socketRef.current.readyState === WebSocket.OPEN) {
+      const commonArr = coinList.filter((item) => nameList.includes(item));
+
+      const unsubscriptions = coinList
         .filter((item) => !commonArr.includes(item))
         .map((coin) => `2~Coinbase~${coin}~USD`);
-      const newSubscriptions = coinList
+      const newSubscriptions = nameList
         .filter((item) => !commonArr.includes(item))
         .map((coin) => `2~Coinbase~${coin}~USD`);
 
@@ -73,32 +78,36 @@ function CoinChartSection() {
         };
         socketRef.current.send(JSON.stringify(subscriptionMessage));
       }
-    } else {
-      socketRef.current.onopen = () => {
-        const subscriptions = coinList.map((coin) => `2~Coinbase~${coin}~USD`);
-        const subscriptionMessage = {
-          action: "SubAdd",
-          subs: subscriptions,
+
+      if (0 < newSubscriptions.length || 0 < unsubscriptions.length) {
+        socketRef.current.onmessage = (event) => {
+          if (!data) return;
+
+          const receivedData: WebsocketDataType = JSON.parse(event.data);
+          if (!receivedData.PRICE) return;
+
+          const res = getChartData(data, receivedData);
+          setChartData(res);
         };
-        if (!socketRef.current) return;
-        socketRef.current.send(JSON.stringify(subscriptionMessage));
-      };
+      }
     }
 
-    socketRef.current.onmessage = (event) => {
-      if (!data) return;
+    setChartData(res);
+    setCoinList(nameList);
+  }, [data]);
 
-      const receivedData: WebsocketDataType = JSON.parse(event.data);
-      if (!receivedData.PRICE) return;
-
-      const res = getChartData(data, receivedData);
-      setChartData(res);
+  useEffect(() => {
+    return () => {
+      if (!socketRef.current) return;
+      socketRef.current.close();
+      socketRef.current = null;
     };
-  }, [coinList]);
+  }, []);
 
   return (
-    <section className="flex flex-col max-w-6xl px-8 mx-auto mt-10 mb-4">
+    <section className="mb-4">
       <CoinChartMenu
+        menuList={menuList}
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />

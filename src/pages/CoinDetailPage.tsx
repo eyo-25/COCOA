@@ -1,11 +1,11 @@
-import CoinInfo from "@/components/coin/CoinInfo";
-import CoinDetailSection from "@/components/coin/detail/CoinDetailSection";
+import DetailContentsSection from "@/components/detail/DetailContentsSection";
+import DetailProfileSection from "@/components/detail/DetailProfileSection";
 
 function CoinDetailPage() {
   return (
     <>
-      <CoinInfo />
-      <CoinDetailSection />
+      <DetailProfileSection />
+      <DetailContentsSection />
     </>
   );
 }

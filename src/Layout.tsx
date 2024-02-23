@@ -3,10 +3,10 @@ import Header from "./components/ui/Header";
 
 function Layout() {
   return (
-    <div>
+    <main className="flex flex-col max-w-5xl px-8 mx-auto mb-3">
       <Header />
       <Outlet />
-    </div>
+    </main>
   );
 }
 

@@ -1,13 +1,14 @@
-import { menuList } from "./CoinChart.data";
+import { MenuType } from "@/common/types/data.type";
 
 type Props = {
   selectedMenuId: number;
   menuClickHandler: (id: number) => void;
+  menuList: MenuType[];
 };
 
-function CoinChartMenu({ selectedMenuId, menuClickHandler }: Props) {
+function CoinChartMenu({ menuList, selectedMenuId, menuClickHandler }: Props) {
   return (
-    <div className="flex justify-between mb-5">
+    <div className="flex justify-between mt-6 mb-5">
       <ul className="flex gap-3">
         {menuList.map(({ title }, i) => (
           <li key={title}>
@@ -22,7 +23,6 @@ function CoinChartMenu({ selectedMenuId, menuClickHandler }: Props) {
           </li>
         ))}
       </ul>
-      <input />
     </div>
   );
 }
