@@ -13,6 +13,24 @@ type RawType = {
   OPENDAY: number;
 };
 
+export interface CoinDetailDataType {
+  Data: {
+    CoinInfo: CoininfoType;
+    AggregatedData: RawType;
+  };
+}
+export interface CoinDetailInfoType {
+  coinInfo: CoininfoType;
+  coinDetail: {
+    MKTCAP: number;
+    SUPPLY: number;
+    PRICE: string;
+    OPENHOUR: number;
+    OPEN24HOUR: number;
+    OPENDAY: number;
+  };
+}
+
 export interface CoinDataType {
   CoinInfo: CoininfoType;
   RAW?: {
@@ -51,6 +69,10 @@ export interface ChartMenuType {
   width: number;
   className: string;
 }
+export interface MenuType {
+  title: string;
+  url: string;
+}
 
 export interface WebsocketDataType {
   FROMSYMBOL: string;
@@ -66,7 +88,7 @@ export type TimeParamsType = {
     aggregate: number;
   };
 };
-export interface BannerMenuType {
+export interface GraphMenuType {
   timeType: TimeType;
   title: string;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import CoinChartBoard from "./CoinChartBoard";
-import CoinChartMenu from "./CoinChartMenu";
+import CoinChartMenu from "../../ui/CoinChartMenu";
 import { useCoinTrends } from "@/common/apis/api";
 import { menuList } from "./CoinChart.data";
 import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
@@ -105,8 +105,9 @@ function CoinChartSection() {
   }, []);
 
   return (
-    <section className="flex flex-col max-w-5xl px-8 mx-auto mt-6 mb-4">
+    <section className="mb-4">
       <CoinChartMenu
+        menuList={menuList}
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />

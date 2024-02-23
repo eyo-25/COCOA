@@ -1,5 +1,10 @@
 import useSWR from "swr";
-import { GetCoinDataType, OHLCVDataType, TimeType } from "../types/data.type";
+import {
+  CoinDetailDataType,
+  GetCoinDataType,
+  OHLCVDataType,
+  TimeType,
+} from "../types/data.type";
 import { timeTypeList } from "@/components/main/coinchart/CoinChart.data";
 import axios from "axios";
 
@@ -42,6 +47,20 @@ export const useCoinTrends = (trendType: string, limit: number = 25) => {
       "?limit=" +
       limit +
       "&tsym=USD&api_key=" +
+      import.meta.env.VITE_API_KEY
+    }`
+  );
+
+  return { data, isLoading, error };
+};
+
+export const useCoinInfo = (coinInternal: string) => {
+  const { data, error, isLoading } = useSWR<CoinDetailDataType>(
+    `${
+      import.meta.env.VITE_API_URL +
+      "/data/top/exchanges/full?fsym=" +
+      coinInternal +
+      "&tsym=USD&limit=1&api_key=" +
       import.meta.env.VITE_API_KEY
     }`
   );

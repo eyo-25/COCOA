@@ -1,6 +1,7 @@
 import { CoinChartDataType } from "@/common/types/data.type";
 import { chartMenuList, koreanCoinName } from "./CoinChart.data";
 import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
+import { Link } from "react-router-dom";
 
 type Props = {
   chartData: CoinChartDataType[];
@@ -37,26 +38,28 @@ function CoinChartBoard({ chartData }: Props) {
       </thead>
       <tbody className="flex flex-col w-full">
         {chartData.map((coin, index) => (
-          <tr
-            key={index}
-            className="flex w-full py-2 rounded-lg hover:bg-gray-500/30"
-          >
-            {chartMenuList.map(({ type, width, className }) => (
-              <td
-                className={`flex items-center ${
-                  type !== "Name" && "border-r border-gray-500"
-                } ${className}`}
-                style={{ width: `${width}%` }}
-                key={type}
-              >
-                {type === "Name"
-                  ? nameTd(coin)
-                  : typeof coin?.[type] === "number"
-                  ? formatPercentageElement(+coin?.[type])
-                  : coin?.[type]}
-              </td>
-            ))}
-          </tr>
+          <Link to={`/assets/${coin.Internal}`}>
+            <tr
+              key={index}
+              className="flex w-full py-2 rounded-lg hover:bg-gray-500/30"
+            >
+              {chartMenuList.map(({ type, width, className }) => (
+                <td
+                  className={`flex items-center ${
+                    type !== "Name" && "border-r border-gray-500"
+                  } ${className}`}
+                  style={{ width: `${width}%` }}
+                  key={type}
+                >
+                  {type === "Name"
+                    ? nameTd(coin)
+                    : typeof coin?.[type] === "number"
+                    ? formatPercentageElement(+coin?.[type])
+                    : coin?.[type]}
+                </td>
+              ))}
+            </tr>
+          </Link>
         ))}
       </tbody>
     </table>

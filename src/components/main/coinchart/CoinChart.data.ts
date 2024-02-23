@@ -1,5 +1,5 @@
 import {
-  BannerMenuType,
+  GraphMenuType,
   ChartMenuType,
   KoreanCoinNameType,
   TimeParamsType,
@@ -17,6 +17,20 @@ export const menuList = [
   {
     title: "최근 거래량",
     url: "/totalvolfull",
+  },
+];
+export const detailMenuList = [
+  {
+    title: "시세차트",
+    url: "/exchanges",
+  },
+  {
+    title: "프로필",
+    url: "/",
+  },
+  {
+    title: "관련 뉴스",
+    url: "/",
   },
 ];
 
@@ -73,7 +87,7 @@ export const graphDataList = {
   month: { barWidth: 2, dateFormat: "YYYY-MM-DD" },
 };
 
-export const bannerMenuList: BannerMenuType[] = [
+export const graphMenuList: GraphMenuType[] = [
   {
     timeType: "hour",
     title: "1 시간",

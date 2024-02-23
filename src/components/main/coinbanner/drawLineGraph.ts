@@ -85,7 +85,7 @@ export function drawLineGraph(
     );
 
   const axisY = axisLeft<number>(yScale)
-    .ticks(4)
+    .ticks(5)
     .tickFormat((d) => {
       const formattedValue = d % 1 === 0 ? d : d.toFixed(3);
       return `$ ${formattedValue}`;
@@ -98,7 +98,7 @@ export function drawLineGraph(
 
   lineGraphGroup
     .selectAll(".y-grid-line")
-    .data(yScale.ticks(4))
+    .data(yScale.ticks(5))
     .enter()
     .append("line")
     .attr("class", "y-grid-line")
@@ -108,7 +108,7 @@ export function drawLineGraph(
     .attr("y2", (d) => yScale(d))
     .attr("stroke", "#E8E8E8")
     .attr("opacity", "0.2")
-    .attr("stroke-width", 0.4);
+    .attr("stroke-width", 0.5);
 
   lineGraphGroup.selectAll(".domain, .tick line").remove();
 

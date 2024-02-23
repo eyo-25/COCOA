@@ -19,11 +19,11 @@ function CoinBannerSection() {
       setIsBannerStop(true);
     }
   };
-
-  const timerStart = () => {
+  const timerReset = () => {
+    timerStop();
     const timer = setInterval(() => {
       onRightButtonClick();
-    }, 3000);
+    }, 8000);
 
     setIsBannerStop(false);
     timerId.current = timer;
@@ -42,7 +42,6 @@ function CoinBannerSection() {
     } else {
       setCoinIndex((prev) => prev + 1);
     }
-    console.log("롸잇!");
   };
 
   useEffect(() => {
@@ -58,42 +57,37 @@ function CoinBannerSection() {
   }, [data]);
 
   useEffect(() => {
-    if (!isBannerStop) {
-      timerStop();
-      timerStart();
-    }
-    console.log("유즈!");
+    if (isBannerStop) return;
+    timerReset();
 
     return () => timerStop();
   }, [coinIndex]);
 
   return (
-    <div className="flex flex-col max-w-5xl px-8 mx-auto my-3">
-      <section className="flex justify-between items-center w-full bg-gray-700 h-[345px] px-5 py-7 rounded-md">
-        <button
-          onClick={onLeftButtonClick}
-          className="w-10 h-10 pr-[2px] bg-gray-800 rounded-md flex-center"
-        >
-          <IoChevronBack className="w-6 h-6 mx-auto" />
-        </button>
-        {0 < coinList.length && (
-          <CoinBannerGraph
-            isBannerStop={isBannerStop}
-            displayCoin={coinList[coinIndex]}
-            selectedMenuType={selectedMenuType}
-            setSelectedMenuType={setSelectedMenuType}
-            timerStop={timerStop}
-            timerStart={timerStart}
-          />
-        )}
-        <button
-          onClick={onRightButtonClick}
-          className="w-10 h-10 bg-gray-800 rounded-md flex-center pl-[2px]"
-        >
-          <IoChevronForward className="w-6 h-6 mx-auto" />
-        </button>
-      </section>
-    </div>
+    <section className="flex justify-between items-center w-full bg-gray-700 h-[345px] px-5 py-7 rounded-md">
+      <button
+        onClick={onLeftButtonClick}
+        className="w-10 h-10 pr-[2px] bg-gray-800 rounded-md flex-center"
+      >
+        <IoChevronBack className="w-6 h-6 mx-auto" />
+      </button>
+      {0 < coinList.length && (
+        <CoinBannerGraph
+          isBannerStop={isBannerStop}
+          displayCoin={coinList[coinIndex]}
+          selectedMenuType={selectedMenuType}
+          setSelectedMenuType={setSelectedMenuType}
+          timerStop={timerStop}
+          timerReset={timerReset}
+        />
+      )}
+      <button
+        onClick={onRightButtonClick}
+        className="w-10 h-10 bg-gray-800 rounded-md flex-center pl-[2px]"
+      >
+        <IoChevronForward className="w-6 h-6 mx-auto" />
+      </button>
+    </section>
   );
 }
 
