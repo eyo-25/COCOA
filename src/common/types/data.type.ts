@@ -13,21 +13,31 @@ type RawType = {
   OPENDAY: number;
 };
 
+interface ExtendCoininfoType extends CoininfoType {
+  TotalCoinsMined: number;
+}
+
 export interface CoinDetailDataType {
+  Response: string;
   Data: {
-    CoinInfo: CoininfoType;
-    AggregatedData: RawType;
+    CoinInfo: ExtendCoininfoType;
+    AggregatedData: { MKTCAP: number };
+    Exchanges: {
+      MKTCAP?: number;
+      PRICE: number;
+      OPENHOUR: number;
+      OPEN24HOUR: number;
+    }[];
   };
 }
 export interface CoinDetailInfoType {
   coinInfo: CoininfoType;
   coinDetail: {
-    MKTCAP: number;
-    SUPPLY: number;
     PRICE: string;
+    SUPPLY: string;
+    MKTCAP: string;
     OPENHOUR: number;
     OPEN24HOUR: number;
-    OPENDAY: number;
   };
 }
 
@@ -79,8 +89,8 @@ export interface WebsocketDataType {
   PRICE?: number;
 }
 
-export type TimeType = "hour" | "day" | "week" | "month";
-export type TimeHistory = "histominute" | "histohour";
+export type TimeType = "hour" | "day" | "week" | "month" | "monthDay";
+export type TimeHistory = "histominute" | "histohour" | "histoday";
 export type TimeParamsType = {
   [Key in TimeType]: {
     type: TimeHistory;

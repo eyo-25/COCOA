@@ -1,76 +1,62 @@
-import { useCoinInfo } from "@/common/apis/api";
+import { fetchOHLCVData, useCoinInfo } from "@/common/apis/api";
 import { CoinDetailInfoType } from "@/common/types/data.type";
 import { priceFormatter } from "@/common/utils/priceFormatter";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import CoinTitle from "../ui/CoinTitle";
 import { calculateChangePercentage } from "@/common/utils/calculateChangePercentage";
 import { formatKoreanNumber } from "@/common/utils/formatKoreanNumber";
+import DetailProfileChange from "./DetailProfileChange";
+import { timeDataType } from "./Detail.data";
 
 function DetailProfileSection() {
   const { coinSymbol } = useParams();
   const { data } = useCoinInfo(String(coinSymbol));
   const [coinInfo, setCoinInfo] = useState<CoinDetailInfoType>();
+  const [timeData, setTimeData] = useState<timeDataType>();
+
+  const getOHLCVDData = async () => {
+    const data = await fetchOHLCVData("monthDay", String(coinSymbol));
+    const week = calculateChangePercentage(data[24].close, data[30].close);
+    const month = calculateChangePercentage(data[0].close, data[30].close);
+    setTimeData({ week, month });
+  };
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || data.Response === "Error") return;
 
-    const { Id, FullName, Internal, ImageUrl } = data.Data.CoinInfo;
-    const { PRICE, SUPPLY, MKTCAP, OPENHOUR, OPEN24HOUR, OPENDAY } =
-      data.Data.AggregatedData;
+    const { Id, FullName, Internal, ImageUrl, TotalCoinsMined } =
+      data.Data.CoinInfo;
+    const { PRICE, OPENHOUR, OPEN24HOUR } = data.Data.Exchanges[0];
+    const { MKTCAP } = data.Data.AggregatedData;
 
     const formattedPrice = PRICE ? priceFormatter(PRICE) : "정보없음";
-    // const formattedMKTCAP = formatKoreanNumber(MKTCAP);
-    // const formattedSupply = formatKoreanNumber(SUPPLY);
+    const formattedMKTCAP = MKTCAP ? formatKoreanNumber(MKTCAP) : "정보없음";
+    const formattedSupply = TotalCoinsMined
+      ? formatKoreanNumber(TotalCoinsMined)
+      : "정보없음";
+    console.log(OPENHOUR, PRICE, OPEN24HOUR);
     const openHourChange = calculateChangePercentage(OPENHOUR, PRICE);
     const open24HourChange = calculateChangePercentage(OPEN24HOUR, PRICE);
-    const openDayChange = calculateChangePercentage(OPENDAY, PRICE);
 
-    console.log(data.Data);
     const coinInfo = { Id, FullName, Internal, ImageUrl };
     const coinDetail = {
       PRICE: formattedPrice,
-      SUPPLY: MKTCAP || "정보없음",
-      MKTCAP: SUPPLY || "정보없음",
+      SUPPLY: formattedSupply,
+      MKTCAP: formattedMKTCAP,
       OPENHOUR: openHourChange,
       OPEN24HOUR: open24HourChange,
-      OPENDAY: openDayChange,
     };
 
+    getOHLCVDData();
     setCoinInfo({ coinInfo, coinDetail });
   }, [data]);
 
   return (
-    <section className="flex-col w-full bg-gray-700 flex-center rounded-md h-[180px]">
-      {coinInfo && (
-        <>
-          <div className="mb-[25px]">
-            <CoinTitle displayCoin={coinInfo.coinInfo} />
-          </div>
-          <ul className="flex ">
-            <li className="relative flex flex-col items-center w-[200px]">
-              <h4 className="text-gray-200">가격</h4>
-              <p className="text-gray-100">{coinInfo.coinDetail.PRICE}</p>
-              <div className="absolute w-full h-[25px] inset-y-0 my-auto border-l border-gray-500"></div>
-            </li>
-            <li className="relative flex flex-col items-center w-[200px]">
-              <h4 className="text-gray-200">시가총액</h4>
-              <p className="text-gray-100">{coinInfo.coinDetail.MKTCAP}</p>
-              <div className="absolute w-full h-[25px] inset-y-0 my-auto border-l border-gray-500"></div>
-            </li>
-            <li className="relative flex flex-col items-center w-[200px]">
-              <h4 className="text-gray-200">총 공급량</h4>
-              <p className="text-gray-100">{coinInfo.coinDetail.SUPPLY}</p>
-              <div className="absolute w-full h-[25px] inset-y-0 my-auto border-l border-gray-500 border-r"></div>
-            </li>
-          </ul>
-          <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
-        </>
+    <section className="flex-col w-full py-10 bg-gray-700 rounded-md flex-center">
+      {coinInfo && timeData ? (
+        <DetailProfileChange coinInfo={coinInfo} timeData={timeData} />
+      ) : (
+        <div>정보 없음</div>
       )}
     </section>
   );
