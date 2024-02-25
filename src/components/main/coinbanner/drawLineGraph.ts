@@ -23,8 +23,9 @@ export function drawLineGraph(
   data: OHLCVType[]
 ) {
   if (!container) return;
+  if (timeType === "monthDay") return;
   const svg = select(container);
-  // svg.selectAll("*").remove();
+  svg.selectAll("*").remove();
 
   const margin = { top: 5, right: 25, left: 45, bottom: 50 };
   const axisXHeight = 20;

@@ -2,8 +2,8 @@ import { fetchOHLCVData } from "@/common/apis/api";
 import { TimeType } from "@/common/types/data.type";
 import { select } from "d3";
 import { useEffect, useRef, useState } from "react";
-import drawLineGraph from "../main/coinbanner/drawLineGraph";
-import CoinGraphMenu from "../main/coinbanner/CoinGraphMenu";
+import drawLineGraph from "../../main/coinbanner/drawLineGraph";
+import CoinGraphMenu from "../../main/coinbanner/CoinGraphMenu";
 
 type Props = {
   coinSymbol: string;
@@ -21,7 +21,7 @@ function DetailContentChart({ coinSymbol }: Props) {
       const data = await fetchOHLCVData(selectedMenuType, String(coinSymbol));
 
       if (svgRef.current) {
-        drawLineGraph(selectedMenuType, svgRef.current, 780, 220, data);
+        drawLineGraph(selectedMenuType, svgRef.current, 800, 220, data);
       }
     } catch (error) {
       console.error(error);
@@ -49,7 +49,7 @@ function DetailContentChart({ coinSymbol }: Props) {
         menuClickHandler={graphMenuClickHandler}
       />
       {isLoading && <p className="mt-2 mb-6">Loading...</p>}
-      <svg ref={svgRef} viewBox={`0 0 ${780} ${220}`}></svg>
+      <svg ref={svgRef} viewBox={`0 0 ${800} ${220}`}></svg>
     </div>
   );
 }

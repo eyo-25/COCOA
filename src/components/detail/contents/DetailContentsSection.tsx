@@ -1,8 +1,9 @@
 import { useState } from "react";
-import CoinChartMenu from "../ui/CoinChartMenu";
-import { detailMenuList } from "../main/coinchart/CoinChart.data";
+import CoinChartMenu from "../../ui/CoinChartMenu";
+import { detailMenuList } from "../../main/coinchart/CoinChart.data";
 import { useParams } from "react-router-dom";
 import DetailContentChart from "./DetailContentChart";
+import NewsCardList from "./NewsCardList";
 
 function DetailContentsSection() {
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
@@ -23,6 +24,7 @@ function DetailContentsSection() {
       {selectedMenuId === 0 && (
         <DetailContentChart coinSymbol={String(coinSymbol)} />
       )}
+      {selectedMenuId === 1 && <NewsCardList />}
     </section>
   );
 }

@@ -118,3 +118,27 @@ export type KoreanCoinNameType = {
 };
 
 export type PercentType = "OPENHOUR" | "OPEN24HOUR" | "OPENDAY";
+
+interface NewsType {
+  id: string;
+  imageurl: string;
+  title: string;
+  url: string;
+  body: string;
+  tags: string;
+  categories: string;
+  source: string;
+}
+export interface NewsDataType {
+  Data: NewsType[];
+}
+export interface NewsListType {
+  id: string;
+  imageurl: string;
+  title: string;
+  url: string;
+  body: string;
+  tags: string[];
+  categories: string;
+  source: string;
+}

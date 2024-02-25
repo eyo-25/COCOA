@@ -1,10 +1,10 @@
 import { CoinDetailInfoType } from "@/common/types/data.type";
-import CoinTitle from "../ui/CoinTitle";
+import CoinTitle from "../../ui/CoinTitle";
 import {
   detailChartInfoList,
   detailChartMenuList,
   timeDataType,
-} from "./Detail.data";
+} from "../Detail.data";
 import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
 
 type Props = {
