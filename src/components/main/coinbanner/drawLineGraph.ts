@@ -88,7 +88,7 @@ export function drawLineGraph(
   const axisY = axisLeft<number>(yScale)
     .ticks(5)
     .tickFormat((d) => {
-      const formattedValue = d % 1 === 0 ? d : d.toFixed(3);
+      const formattedValue = d % 1 === 0 ? d : d.toFixed(2);
       return `$ ${formattedValue}`;
     });
   lineGraphGroup

@@ -1,45 +1,91 @@
-import { useCoinNews } from "@/common/apis/api";
-import NewsCard from "./NewsCard";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { NewsListType } from "@/common/types/data.type";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "@/common/assets";
 
-function NewsCardList() {
-  const { coinSymbol } = useParams();
-  const { data, isLoading } = useCoinNews(String(coinSymbol));
-  const [newsList, setNewsList] = useState<NewsListType[]>([]);
+type Props = {
+  newsList: NewsListType[];
+};
+
+function NewsCardList({ newsList }: Props) {
+  const imageListRef = useRef<Array<HTMLImageElement | null>>(
+    Array.from({ length: newsList.length }, () => null)
+  );
 
   useEffect(() => {
-    if (!data) return;
+    if (!imageListRef.current) return;
 
-    const formattedData = data.Data.map((item) => {
-      const { id, imageurl, title, url, body, tags, categories, source } = item;
-      const tagArr = [];
-      if (tags !== "") {
-        tagArr.push(...tags.split("|"));
-      }
+    const callback = (
+      entries: IntersectionObserverEntry[],
+      observer: IntersectionObserver
+    ) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // 이미지가 화면에 나타나면 data-src-url을 src로 할당하고 감시 해제
+          const imageElement = entry.target as HTMLImageElement;
+          const dataSrcUrl = imageElement.getAttribute("data-src-url");
+          if (dataSrcUrl) {
+            imageElement.src = dataSrcUrl;
+            observer.unobserve(imageElement);
+          }
+        }
+      });
+    };
 
-      return {
-        id,
-        imageurl,
-        title,
-        url,
-        body,
-        tags: tagArr,
-        categories,
-        source,
-      };
+    const imageObserver = new IntersectionObserver(callback, {
+      rootMargin: "0px 0px 500px 0px",
     });
 
-    setNewsList(formattedData);
-  }, [data]);
+    // 이미지 요소들을 감시 대상으로 등록
+    imageListRef.current.forEach((img) => {
+      if (img) {
+        imageObserver.observe(img);
+      }
+    });
 
-  return (
-    <div className="grid grid-cols-3 mb-8">
-      {isLoading && <p>Loading...</p>}
-      {0 < newsList.length && newsList.map((data) => <NewsCard data={data} />)}
+    return () => {
+      // 컴포넌트 언마운트 시 Observer 해제
+      imageObserver.disconnect();
+      console.log("종료");
+    };
+  }, []);
+
+  return newsList.map((data, index) => (
+    <div key={data.id} className="flex flex-col w-[300px] mb-10">
+      <Link
+        to={data.url}
+        target="_blank"
+        className="relative h-[200px] rounded-md mb-4 overflow-hidden"
+      >
+        <div className="absolute opacity-80 z-10 px-2 pt-1 rounded-sm pb-[5px] font-[500] bg-gray-800 bottom-3 left-3">
+          <p className="text-xs text-gray-200">{data.source}</p>
+        </div>
+        <div className="absolute w-8 h-8 bg-gray-800 rounded-md opacity-80 right-2 top-2 flex-center">
+          <ArrowUpRight className="w-4 h-4 mx-auto" />
+        </div>
+        <div className="absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-green/25 from-10% to-green/0 to-100% rounded-b-md"></div>
+        <img
+          ref={(el) => (imageListRef.current[index] = el)}
+          data-src-url={data.imageurl}
+          alt={data.source + " News"}
+          className="object-cover w-full h-full bg-gray-700"
+        />
+      </Link>
+      <div className="flex flex-col overflow-hidden">
+        <h4 className="z-10 mb-2 text-lg font-bold leading-6 text-gray-100 ellipsis">
+          {data.title}
+        </h4>
+        <p className="text-sm ellipsis mb-[10px]">{data.body}</p>
+        <div className="flex flex-wrap overflow-hidden max-h-12 text-green">
+          {data.tags.map((tag, i) => (
+            <span key={i} className="mr-3">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
-  );
+  ));
 }
 
 export default NewsCardList;

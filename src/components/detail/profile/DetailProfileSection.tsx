@@ -11,7 +11,7 @@ import { timeDataType } from "../Detail.data";
 
 function DetailProfileSection() {
   const { coinSymbol } = useParams();
-  const { data } = useCoinInfo(String(coinSymbol));
+  const { data, isLoading } = useCoinInfo(String(coinSymbol));
   const [coinInfo, setCoinInfo] = useState<CoinDetailInfoType>();
   const [timeData, setTimeData] = useState<timeDataType>();
 
@@ -22,6 +22,7 @@ function DetailProfileSection() {
     setTimeData({ week, month });
   };
 
+  // TODO : 데이터 없을때 구분해서 UI 출력
   useEffect(() => {
     if (!data || data.Response === "Error") return;
 
@@ -60,10 +61,9 @@ function DetailProfileSection() {
         <IoChevronBack className="w-6 h-6 mx-auto" />
       </Link>
       <p className="absolute text-sm right-6 top-5">CCCAGG 기준</p>
-      {coinInfo && timeData ? (
+      {isLoading && <p>Loading...</p>}
+      {coinInfo && timeData && (
         <DetailProfileChange coinInfo={coinInfo} timeData={timeData} />
-      ) : (
-        <div>정보 없음</div>
       )}
     </section>
   );
