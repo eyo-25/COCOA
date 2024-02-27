@@ -12,7 +12,8 @@ export default function CoinTitle({ displayCoin }: Props) {
         className={`flex overflow-hidden w-[35px] h-[35px] mr-[10px] rounded-full`}
       >
         <img
-          alt={"코인 아이콘"}
+          data-testid="coin-icon"
+          alt={displayCoin.FullName}
           className="w-full h-full scale-110"
           srcSet={`${import.meta.env.VITE_BASE_URL}${
             displayCoin.ImageUrl

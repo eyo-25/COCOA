@@ -21,9 +21,8 @@ function NewsCardList({ newsList }: Props) {
     ) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // 이미지가 화면에 나타나면 data-src-url을 src로 할당하고 감시 해제
           const imageElement = entry.target as HTMLImageElement;
-          const dataSrcUrl = imageElement.getAttribute("data-src-url");
+          const dataSrcUrl = imageElement.getAttribute("data-src");
           if (dataSrcUrl) {
             imageElement.src = dataSrcUrl;
             observer.unobserve(imageElement);
@@ -33,21 +32,16 @@ function NewsCardList({ newsList }: Props) {
     };
 
     const imageObserver = new IntersectionObserver(callback, {
-      rootMargin: "0px 0px 500px 0px",
+      rootMargin: "0px 0px 300px 0px",
     });
 
-    // 이미지 요소들을 감시 대상으로 등록
     imageListRef.current.forEach((img) => {
       if (img) {
         imageObserver.observe(img);
       }
     });
 
-    return () => {
-      // 컴포넌트 언마운트 시 Observer 해제
-      imageObserver.disconnect();
-      console.log("종료");
-    };
+    return () => imageObserver.disconnect();
   }, []);
 
   return newsList.map((data, index) => (
@@ -66,7 +60,7 @@ function NewsCardList({ newsList }: Props) {
         <div className="absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-green/25 from-10% to-green/0 to-100% rounded-b-md"></div>
         <img
           ref={(el) => (imageListRef.current[index] = el)}
-          data-src-url={data.imageurl}
+          data-src={data.imageurl}
           alt={data.source + " News"}
           className="object-cover w-full h-full bg-gray-700"
         />

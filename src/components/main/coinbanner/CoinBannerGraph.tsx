@@ -93,7 +93,11 @@ function CoinBannerGraph({
             <p className="mt-2 mb-6">Loading...</p>
           </div>
         )}
-        <svg ref={svgRef} viewBox={`0 0 ${780} ${220}`}></svg>
+        <svg
+          data-testid="coin-banner-graph"
+          ref={svgRef}
+          viewBox={`0 0 ${780} ${220}`}
+        ></svg>
       </div>
     </>
   );

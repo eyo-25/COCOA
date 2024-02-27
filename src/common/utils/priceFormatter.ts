@@ -1,33 +1,37 @@
 export const priceFormatter = (price: number) => {
-  const [essencePart, decimalPart = ""] = price.toString().split(".");
-  const arr = [];
-  let cnt = 0;
+  // 숫자가 지수 표기법으로 표현 되는것을 막기위해 미리 소수점 6자리까지 자릅니다.
+  const toFixedPrice = price.toFixed(6);
+  const [essencePart, decimalPart] = toFixedPrice.toString().split(".");
 
-  for (let i = essencePart.length - 1; i >= 0; i--) {
-    cnt++;
-    arr.push(essencePart[i]);
+  // 뒤에서부터 3자리 단위로 "," 부착
+  const formattedEssence = essencePart
+    .split("")
+    .reverse()
+    .reduce((acc, digit, index) => {
+      if (index !== 0 && index % 3 === 0) {
+        return acc + "," + digit;
+      } else {
+        return acc + digit;
+      }
+    }, "");
 
-    if (cnt >= 3) {
-      arr.push(",");
-      cnt = 0;
-    }
+  // 포맷팅한 글자를 다시 뒤집어서 합쳐줍니다.
+  const response = "$ " + formattedEssence.split("").reverse().join("");
+
+  // 정수파트가 0보다 크면 2째자리까지 return
+  if (0 < Number(essencePart)) {
+    return response + "." + decimalPart.slice(0, 2);
   }
 
-  if (arr[arr.length - 1] === ",") {
-    arr.pop();
+  let formattedDecimal = decimalPart;
+
+  // 소수점 둘째 자리까지 끝자리가 0이면 제거
+  while (formattedDecimal.endsWith("0")) {
+    if (formattedDecimal.length === 2) break;
+    formattedDecimal = formattedDecimal.slice(0, -1);
   }
 
-  let res = arr.reverse().join("");
+  if (formattedDecimal === "00") return "-";
 
-  if (arr.length <= 1) {
-    res = "$ " + res + "." + decimalPart.split("").slice(0, 5).join("");
-  } else {
-    res = "$ " + res + "." + decimalPart.split("").slice(0, 2).join("");
-  }
-
-  if (res.endsWith(".")) {
-    res = res.slice(0, -1);
-  }
-
-  return res;
+  return response + "." + formattedDecimal;
 };
