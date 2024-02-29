@@ -1,32 +1,16 @@
-export const priceFormatter = (price: number) => {
-  const toFixedPrice = price.toFixed(6);
-  const [essencePart, decimalPart] = toFixedPrice.toString().split(".");
+export const priceFormatter = (price: number): string => {
+  const formattedNumber = Math.round(price * 1e6) / 1e6;
+  const fractionDigits = formattedNumber > 1 ? 2 : 6;
 
-  const formattedEssence = essencePart
-    .split("")
-    .reverse()
-    .reduce((acc, digit, index) => {
-      if (index !== 0 && index % 3 === 0) {
-        return acc + "," + digit;
-      } else {
-        return acc + digit;
-      }
-    }, "");
+  if (formattedNumber === 0 || formattedNumber < 0) return "-";
 
-  const response = "$ " + formattedEssence.split("").reverse().join("");
-
-  if (0 < Number(essencePart)) {
-    return response + "." + decimalPart.slice(0, 2);
-  }
-
-  let formattedDecimal = decimalPart;
-
-  while (formattedDecimal.endsWith("0")) {
-    if (formattedDecimal.length === 2) break;
-    formattedDecimal = formattedDecimal.slice(0, -1);
-  }
-
-  if (formattedDecimal === "00") return "-";
-
-  return response + "." + formattedDecimal;
+  return (
+    "$ " +
+    formattedNumber.toLocaleString("en-US", {
+      style: "decimal",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: fractionDigits,
+    })
+  );
 };

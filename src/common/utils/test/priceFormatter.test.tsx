@@ -4,6 +4,8 @@ import { priceFormatter } from "../priceFormatter";
 test("priceFormatter 테스트", () => {
   // Test cases
   const testCases = [
+    { price: -0.1234, expected: "-" },
+    { price: -1, expected: "-" },
     { price: 0, expected: "-" },
     { price: 123456, expected: "$ 123,456.00" },
     { price: 9876543.2, expected: "$ 9,876,543.20" },

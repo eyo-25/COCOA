@@ -3,6 +3,8 @@ import { koreanNumberFormatter } from "../koreanNumberFormatter";
 
 test("koreanNumberFormatter 테스트", () => {
   const testCases = [
+    { input: -0.1234, expected: "정보 없음" },
+    { input: -1, expected: "정보 없음" },
     { input: 0, expected: "정보 없음" },
     { input: 1234, expected: "1234" },
     { input: 12345, expected: "1.23만" },
