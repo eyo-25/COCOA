@@ -4,7 +4,7 @@ import { priceFormatter } from "@/common/utils/priceFormatter";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { calculateChangePercentage } from "@/common/utils/calculateChangePercentage";
-import { formatKoreanNumber } from "@/common/utils/formatKoreanNumber";
+import { koreanNumberFormatter } from "@/common/utils/koreanNumberFormatter";
 import DetailProfileChange from "./DetailProfileChange";
 import { IoChevronBack } from "react-icons/io5";
 import { timeDataType } from "../Detail.data";
@@ -32,9 +32,9 @@ function DetailProfileSection() {
     const { MKTCAP } = data.Data.AggregatedData;
 
     const formattedPrice = PRICE ? priceFormatter(PRICE) : "정보없음";
-    const formattedMKTCAP = MKTCAP ? formatKoreanNumber(MKTCAP) : "정보없음";
+    const formattedMKTCAP = MKTCAP ? koreanNumberFormatter(MKTCAP) : "정보없음";
     const formattedSupply = TotalCoinsMined
-      ? formatKoreanNumber(TotalCoinsMined)
+      ? koreanNumberFormatter(TotalCoinsMined)
       : "정보없음";
     const openHourChange = calculateChangePercentage(OPENHOUR, PRICE);
     const open24HourChange = calculateChangePercentage(OPEN24HOUR, PRICE);

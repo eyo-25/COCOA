@@ -6,7 +6,7 @@ import {
 } from "@/common/types/data.type";
 import { priceFormatter } from "./priceFormatter";
 import { calculateChangePercentage } from "./calculateChangePercentage";
-import { formatKoreanNumber } from "./formatKoreanNumber";
+import { koreanNumberFormatter } from "./koreanNumberFormatter";
 
 export const getChartData = (
   data: GetCoinDataType,
@@ -32,8 +32,8 @@ export const getChartData = (
     }
 
     const formattedPrice = priceFormatter(price);
-    const formattedMKTCAP = formatKoreanNumber(MKTCAP);
-    const formattedSupply = formatKoreanNumber(SUPPLY);
+    const formattedMKTCAP = koreanNumberFormatter(MKTCAP);
+    const formattedSupply = koreanNumberFormatter(SUPPLY);
     const openHourChange = calculateChangePercentage(OPENHOUR, price);
     const open24HourChange = calculateChangePercentage(OPEN24HOUR, price);
     const openDayChange = calculateChangePercentage(OPENDAY, price);
