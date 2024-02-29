@@ -2,6 +2,7 @@ import useSWR from "swr";
 import {
   CoinDetailDataType,
   GetCoinDataType,
+  NewsDataType,
   OHLCVDataType,
   TimeType,
 } from "../types/data.type";
@@ -61,6 +62,20 @@ export const useCoinInfo = (coinInternal: string) => {
       "/data/top/exchanges/full?fsym=" +
       coinInternal +
       "&tsym=USD&limit=1&api_key=" +
+      import.meta.env.VITE_API_KEY
+    }`
+  );
+
+  return { data, isLoading, error };
+};
+
+export const useCoinNews = (coinInternal: string) => {
+  const { data, error, isLoading } = useSWR<NewsDataType>(
+    `${
+      import.meta.env.VITE_API_URL +
+      "/data/v2/news/?categories=" +
+      coinInternal +
+      "&api_key=" +
       import.meta.env.VITE_API_KEY
     }`
   );

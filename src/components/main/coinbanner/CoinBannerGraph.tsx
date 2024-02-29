@@ -89,11 +89,15 @@ function CoinBannerGraph({
         />
         {isLoading && (
           <div className="absolute flex-center flex-col w-full h-[220px] text-gray-100">
-            <img className="w-10 h-10" src={LoadingSpinner} />
+            <img className="w-10 h-10" alt="로딩 스피너" src={LoadingSpinner} />
             <p className="mt-2 mb-6">Loading...</p>
           </div>
         )}
-        <svg ref={svgRef} viewBox={`0 0 ${780} ${220}`}></svg>
+        <svg
+          data-testid="coin-banner-graph"
+          ref={svgRef}
+          viewBox={`0 0 ${780} ${220}`}
+        ></svg>
       </div>
     </>
   );

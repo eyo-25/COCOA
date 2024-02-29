@@ -25,10 +25,6 @@ export const detailMenuList = [
     url: "/exchanges",
   },
   {
-    title: "프로필",
-    url: "/",
-  },
-  {
     title: "관련 뉴스",
     url: "/",
   },
@@ -78,7 +74,8 @@ export const timeTypeList: TimeParamsType = {
   hour: { type: "histominute", limit: 60, aggregate: 1 },
   day: { type: "histominute", limit: 144, aggregate: 10 },
   week: { type: "histohour", limit: 168, aggregate: 1 },
-  month: { type: "histohour", limit: 150, aggregate: 6 },
+  month: { type: "histohour", limit: 120, aggregate: 6 },
+  monthDay: { type: "histoday", limit: 30, aggregate: 1 },
 };
 export const graphDataList = {
   hour: { barWidth: 9, dateFormat: "HH:MM" },

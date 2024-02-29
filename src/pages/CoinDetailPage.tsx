@@ -1,5 +1,5 @@
-import DetailContentsSection from "@/components/detail/DetailContentsSection";
-import DetailProfileSection from "@/components/detail/DetailProfileSection";
+import DetailContentsSection from "@/components/detail/contents/DetailContentsSection";
+import DetailProfileSection from "@/components/detail/profile/DetailProfileSection";
 
 function CoinDetailPage() {
   return (
