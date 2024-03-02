@@ -142,3 +142,13 @@ export interface NewsListType {
   categories: string;
   source: string;
 }
+
+export interface FeedType {
+  key: string;
+  name: string;
+  img: string;
+  lang: string;
+}
+export interface FeedsDataType {
+  Data: { Feeds: FeedType[] };
+}

@@ -23,7 +23,7 @@ function CoinBannerSection() {
     timerStop();
     const timer = setInterval(() => {
       onRightButtonClick();
-    }, 8000);
+    }, 10000);
 
     setIsBannerStop(false);
     timerId.current = timer;
