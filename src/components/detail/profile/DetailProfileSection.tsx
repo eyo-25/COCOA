@@ -1,17 +1,17 @@
-import { fetchOHLCVData, useCoinInfo } from "@/common/apis/api";
-import { CoinDetailInfoType } from "@/common/types/data.type";
-import { priceFormatter } from "@/common/utils/priceFormatter";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
+import { fetchOHLCVData, useCoinInfo } from "@/common/apis/api";
+import { CoinDetailInfoType, timeDataType } from "@/common/types/data.type";
 import { calculateChangePercentage } from "@/common/utils/calculateChangePercentage";
-import { koreanNumberFormatter } from "@/common/utils/koreanNumberFormatter";
 import DetailProfileChange from "./DetailProfileChange";
 import { IoChevronBack } from "react-icons/io5";
-import { timeDataType } from "../Detail.data";
+import { XIcon } from "@/common/assets";
+import { getProfileData } from "@/common/utils/getProfileData";
 
 function DetailProfileSection() {
   const { coinSymbol } = useParams();
-  const { data, isLoading } = useCoinInfo(String(coinSymbol));
+  const { data, isLoading, error } = useCoinInfo(String(coinSymbol));
   const [coinInfo, setCoinInfo] = useState<CoinDetailInfoType>();
   const [timeData, setTimeData] = useState<timeDataType>();
 
@@ -22,34 +22,10 @@ function DetailProfileSection() {
     setTimeData({ week, month });
   };
 
-  // TODO : 데이터 없을때 구분해서 UI 출력
   useEffect(() => {
-    if (!data || data.Response === "Error") return;
-
-    const { Id, FullName, Internal, ImageUrl, TotalCoinsMined } =
-      data.Data.CoinInfo;
-    const { PRICE, OPENHOUR, OPEN24HOUR } = data.Data.Exchanges[0];
-    const { MKTCAP } = data.Data.AggregatedData;
-
-    const formattedPrice = PRICE ? priceFormatter(PRICE) : "정보없음";
-    const formattedMKTCAP = MKTCAP ? koreanNumberFormatter(MKTCAP) : "정보없음";
-    const formattedSupply = TotalCoinsMined
-      ? koreanNumberFormatter(TotalCoinsMined)
-      : "정보없음";
-    const openHourChange = calculateChangePercentage(OPENHOUR, PRICE);
-    const open24HourChange = calculateChangePercentage(OPEN24HOUR, PRICE);
-
-    const coinInfo = { Id, FullName, Internal, ImageUrl };
-    const coinDetail = {
-      PRICE: formattedPrice,
-      SUPPLY: formattedSupply,
-      MKTCAP: formattedMKTCAP,
-      OPENHOUR: openHourChange,
-      OPEN24HOUR: open24HourChange,
-    };
-
+    if (!data) return;
     getOHLCVDData();
-    setCoinInfo({ coinInfo, coinDetail });
+    setCoinInfo(getProfileData(data));
   }, [data]);
 
   return (
@@ -61,6 +37,12 @@ function DetailProfileSection() {
         <IoChevronBack className="w-6 h-6 mx-auto" />
       </Link>
       <p className="absolute text-sm right-6 top-5">CCCAGG 기준</p>
+      {error && (
+        <div className="flex flex-col items-center mt-5">
+          <XIcon className="mb-2 w-14 h-14" />
+          <p>{error.message}</p>
+        </div>
+      )}
       {isLoading && <p>Loading...</p>}
       {coinInfo && timeData && (
         <DetailProfileChange coinInfo={coinInfo} timeData={timeData} />

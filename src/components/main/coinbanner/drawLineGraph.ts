@@ -25,7 +25,6 @@ export function drawLineGraph(
   if (!container) return;
   if (timeType === "monthDay") return;
   const svg = select(container);
-  svg.selectAll("*").remove();
 
   const margin = { top: 5, right: 25, left: 45, bottom: 50 };
   const axisXHeight = 20;
@@ -242,8 +241,6 @@ export function drawLineGraph(
     .attr("font-size", "12px")
     .attr("font-weight", 700)
     .attr("fill", "#111111");
-
-  mouseTrackerGroup.raise();
 
   mouseTrackerGroup
     .on("mouseleave", () => {

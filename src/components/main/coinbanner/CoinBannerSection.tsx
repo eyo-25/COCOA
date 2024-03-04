@@ -3,7 +3,7 @@ import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { CoininfoType, TimeType } from "@/common/types/data.type";
 import CoinBannerGraph from "./CoinBannerGraph";
 import { randomNumberGenerator } from "@/common/utils/randomNumberGenerator";
-import { useCoinTrends } from "@/common/apis/api";
+import { useCoinTrends } from "@/common/apis/useCoinTrends";
 
 function CoinBannerSection() {
   const [isBannerStop, setIsBannerStop] = useState<boolean>(false);

@@ -1,10 +1,6 @@
-import { CoinDetailInfoType } from "@/common/types/data.type";
+import { CoinDetailInfoType, timeDataType } from "@/common/types/data.type";
 import CoinTitle from "../../ui/CoinTitle";
-import {
-  detailChartInfoList,
-  detailChartMenuList,
-  timeDataType,
-} from "../Detail.data";
+import { detailChartInfoList, detailChartMenuList } from "../Detail.data";
 import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
 
 type Props = {
@@ -14,14 +10,14 @@ type Props = {
 
 function DetailProfileChange({ coinInfo, timeData }: Props) {
   const timerData = detailChartInfoList.map(({ title, info }) => {
-    let change = <></>;
+    let changeElement = <></>;
     if (info === "OPENHOUR" || info === "OPEN24HOUR") {
-      change = formatPercentageElement(coinInfo.coinDetail[info]);
+      changeElement = formatPercentageElement(coinInfo.coinDetail[info]);
     } else if (info === "week" || info === "month") {
-      change = formatPercentageElement(timeData[info]);
+      changeElement = formatPercentageElement(timeData[info]);
     }
 
-    return { title, change };
+    return { title, changeElement };
   });
 
   return (
@@ -42,13 +38,13 @@ function DetailProfileChange({ coinInfo, timeData }: Props) {
         ))}
       </ul>
       <ul className="flex gap-5">
-        {timerData.map(({ title, change }) => (
+        {timerData.map(({ title, changeElement }) => (
           <li
             key={title}
             className="flex justify-between items-center rounded-sm px-5 h-[35px] w-[190px] bg-gray-600"
           >
             <p>{title}</p>
-            {change}
+            {changeElement}
           </li>
         ))}
       </ul>

@@ -1,14 +1,50 @@
-import { CoinChartDataType } from "@/common/types/data.type";
+import {
+  CoinChartDataType,
+  FormattenChartType,
+} from "@/common/types/data.type";
 import { chartMenuList, koreanCoinName } from "./CoinChart.data";
-import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { priceFormatter } from "@/common/utils/priceFormatter";
+import { koreanNumberFormatter } from "@/common/utils/koreanNumberFormatter";
+import { calculateChangePercentage } from "@/common/utils/calculateChangePercentage";
+import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
 
 type Props = {
   chartData: CoinChartDataType[];
 };
 
 function CoinChartBoard({ chartData }: Props) {
-  const nameTd = (coin: CoinChartDataType) => {
+  const [formattedChart, SetFormattedChart] = useState<FormattenChartType[]>(
+    []
+  );
+
+  useEffect(() => {
+    const formattedChart = chartData.map((data) => {
+      const { PRICE, OPENHOUR, OPEN24HOUR, OPENDAY, SUPPLY, MKTCAP } = data;
+
+      const formattedPrice = priceFormatter(PRICE);
+      const formattedMKTCAP = koreanNumberFormatter(MKTCAP);
+      const formattedSupply = koreanNumberFormatter(SUPPLY);
+      const openHourChange = calculateChangePercentage(OPENHOUR, PRICE);
+      const open24HourChange = calculateChangePercentage(OPEN24HOUR, PRICE);
+      const openDayChange = calculateChangePercentage(OPENDAY, PRICE);
+
+      return {
+        ...data,
+        PRICE: formattedPrice,
+        OPENHOUR: formatPercentageElement(openHourChange),
+        OPEN24HOUR: formatPercentageElement(open24HourChange),
+        OPENDAY: formatPercentageElement(openDayChange),
+        SUPPLY: formattedSupply,
+        MKTCAP: formattedMKTCAP,
+      };
+    });
+
+    SetFormattedChart(formattedChart);
+  }, [chartData]);
+
+  const nameTd = (coin: FormattenChartType) => {
     return (
       <div className="flex items-center ml-2">
         <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full">
@@ -43,7 +79,7 @@ function CoinChartBoard({ chartData }: Props) {
         </tr>
       </thead>
       <tbody className="flex flex-col w-full">
-        {chartData.map((coin, index) => (
+        {formattedChart.map((coin, index) => (
           <tr
             key={index}
             onClick={() => onClickHandler(coin.Internal)}
@@ -57,11 +93,7 @@ function CoinChartBoard({ chartData }: Props) {
                 style={{ width: `${width}%` }}
                 key={type}
               >
-                {type === "Name"
-                  ? nameTd(coin)
-                  : typeof coin?.[type] === "number"
-                  ? formatPercentageElement(+coin?.[type])
-                  : coin?.[type]}
+                {type === "Name" ? nameTd(coin) : coin?.[type]}
               </td>
             ))}
           </tr>

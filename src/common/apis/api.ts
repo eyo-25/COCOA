@@ -1,8 +1,7 @@
 import useSWR from "swr";
 import {
   CoinDetailDataType,
-  FeedsDataType,
-  GetCoinDataType,
+  CustomError,
   NewsDataType,
   OHLCVDataType,
   TimeType,
@@ -40,22 +39,6 @@ export const fetchOHLCVData = async (
   return filteredData;
 };
 
-export const useCoinTrends = (trendType: string, limit: number = 25) => {
-  const { data, error, isLoading } = useSWR<GetCoinDataType>(
-    `${
-      import.meta.env.VITE_API_URL +
-      "/data/top" +
-      trendType +
-      "?limit=" +
-      limit +
-      "&tsym=USD&api_key=" +
-      import.meta.env.VITE_API_KEY
-    }`
-  );
-
-  return { data, isLoading, error };
-};
-
 export const useCoinInfo = (coinInternal: string) => {
   const { data, error, isLoading } = useSWR<CoinDetailDataType>(
     `${
@@ -66,6 +49,15 @@ export const useCoinInfo = (coinInternal: string) => {
       import.meta.env.VITE_API_KEY
     }`
   );
+
+  if (data && data.Response === "Error") {
+    const customError: CustomError = {
+      message: data.Message,
+      type: data.Message + "Error",
+    };
+
+    return { data: null, isLoading: isLoading, error: customError };
+  }
 
   return { data, isLoading, error };
 };
@@ -103,12 +95,4 @@ export const useCoinFeedsNews = (feed: string) => {
   const { data, error, isLoading } = useSWR<NewsDataType>(url);
 
   return { data, error, isLoading };
-};
-
-export const useFeeds = () => {
-  const { data, error, isLoading } = useSWR<FeedsDataType>(
-    `${import.meta.env.VITE_API_URL + "/data/news/feedsandcategories"}`
-  );
-
-  return { data, isLoading, error };
 };

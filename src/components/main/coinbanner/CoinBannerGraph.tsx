@@ -7,6 +7,7 @@ import { PlayIcon, StopIcon } from "@/common/assets";
 import { LoadingSpinner } from "@/common/gif";
 import CoinTitle from "@/components/ui/CoinTitle";
 import CoinGraphMenu from "./CoinGraphMenu";
+import { Link } from "react-router-dom";
 
 type Props = {
   isBannerStop: boolean;
@@ -26,6 +27,7 @@ function CoinBannerGraph({
   timerReset,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const svgRef = useRef(null);
 
   const onBannerStart = () => {
@@ -51,7 +53,7 @@ function CoinBannerGraph({
         drawLineGraph(selectedMenuType, svgRef.current, 780, 220, data);
       }
     } catch (error) {
-      console.error(error);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +69,12 @@ function CoinBannerGraph({
     <>
       <div className="relative w-[780px] h-full max-h-[350px] mx-auto pl-4">
         <div className="flex items-center justify-between mb-3">
-          <CoinTitle displayCoin={displayCoin} />
+          <Link
+            className="pr-3 rounded-md hover:bg-gray-500/30"
+            to={`/assets/${displayCoin.Internal}`}
+          >
+            <CoinTitle displayCoin={displayCoin} />
+          </Link>
           <div className="flex gap-2">
             <button className="flex-center pb-[0.5px] w-[29px] h-[29px] bg-gray-800 rounded-full">
               <StopIcon

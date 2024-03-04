@@ -8,11 +8,6 @@ type detailChartInfo = {
   info: "OPENHOUR" | "OPEN24HOUR" | "SUPPLY" | "week" | "month";
 };
 
-export type timeDataType = {
-  week: number;
-  month: number;
-};
-
 export const detailChartMenuList: detailChartMenu[] = [
   { title: "가격", info: "PRICE" },
   { title: "시가총액", info: "MKTCAP" },

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { NewsListType } from "@/common/types/data.type";
 import { Link } from "react-router-dom";
-import { ArrowUpRight } from "@/common/assets";
+import { ArrowUpRight, Placeholder } from "@/common/assets";
 
 type Props = {
   newsList: NewsListType[];
@@ -63,6 +63,8 @@ function NewsCardList({ newsList }: Props) {
             <img
               ref={(el) => (imageListRef.current[index] = el)}
               data-src={data.imageurl}
+              src={Placeholder}
+              onError={(e) => (e.currentTarget.src = Placeholder)}
               alt={data.source + " News"}
               className="object-cover w-full h-full bg-gray-700"
             />

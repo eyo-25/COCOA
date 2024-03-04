@@ -18,6 +18,7 @@ interface ExtendCoininfoType extends CoininfoType {
 }
 
 export interface CoinDetailDataType {
+  Message: string;
   Response: string;
   Data: {
     CoinInfo: ExtendCoininfoType;
@@ -57,9 +58,9 @@ export interface CoinFilterdDataType {
   };
 }
 export interface CoinChartDataType extends CoininfoType {
-  MKTCAP: string;
-  SUPPLY: string;
-  PRICE: string;
+  MKTCAP: number;
+  SUPPLY: number;
+  PRICE: number;
   OPENHOUR: number;
   OPEN24HOUR: number;
   OPENDAY: number;
@@ -82,6 +83,18 @@ export interface ChartMenuType {
 export interface MenuType {
   title: string;
   url: string;
+}
+export interface FormattenChartType {
+  PRICE: string;
+  OPENHOUR: JSX.Element;
+  OPEN24HOUR: JSX.Element;
+  OPENDAY: JSX.Element;
+  SUPPLY: string;
+  MKTCAP: string;
+  Id: string;
+  FullName: string;
+  Internal: string;
+  ImageUrl: string;
 }
 
 export interface WebsocketDataType {
@@ -143,12 +156,12 @@ export interface NewsListType {
   source: string;
 }
 
-export interface FeedType {
-  key: string;
-  name: string;
-  img: string;
-  lang: string;
+export interface CustomError {
+  message: string;
+  type: string;
 }
-export interface FeedsDataType {
-  Data: { Feeds: FeedType[] };
-}
+
+export type timeDataType = {
+  week: number;
+  month: number;
+};
