@@ -139,4 +139,5 @@ export const koreanCoinName: KoreanCoinNameType = {
   FIL: "파일코인",
   XMR: "모네로",
   WLD: "월드코인",
+  FDUSD: "FDUSD",
 };

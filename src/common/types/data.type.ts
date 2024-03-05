@@ -1,3 +1,12 @@
+export type detailChartMenu = {
+  title: string;
+  info: "PRICE" | "MKTCAP" | "SUPPLY";
+};
+export type detailChartInfo = {
+  title: string;
+  info: "OPENHOUR" | "OPEN24HOUR" | "OPENWEEK" | "OPENMONTH";
+};
+
 export type CoininfoType = {
   Id: string;
   FullName: string;
@@ -39,6 +48,8 @@ export interface CoinDetailInfoType {
     MKTCAP: string;
     OPENHOUR: number;
     OPEN24HOUR: number;
+    OPENWEEK: number;
+    OPENMONTH: number;
   };
 }
 
@@ -121,6 +132,8 @@ export interface OHLCVType {
   close: number;
 }
 export interface OHLCVDataType {
+  Message: string;
+  Response: string;
   Data: {
     Data: OHLCVType[];
   };

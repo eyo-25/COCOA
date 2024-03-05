@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { select } from "d3";
+import { Link } from "react-router-dom";
+
 import { CoininfoType, TimeType } from "@/common/types/data.type";
 import drawLineGraph from "./drawLineGraph";
-import { fetchOHLCVData } from "@/common/apis/api";
 import { PlayIcon, StopIcon } from "@/common/assets";
-import { LoadingSpinner } from "@/common/gif";
 import CoinTitle from "@/components/ui/CoinTitle";
 import CoinGraphMenu from "./CoinGraphMenu";
-import { Link } from "react-router-dom";
+import Loading from "@/components/ui/Loading";
+import { fetchOHLCVData } from "@/common/apis/fetchOHLCVData";
+import Error from "@/components/ui/Error";
 
 type Props = {
   isBannerStop: boolean;
@@ -94,12 +96,8 @@ function CoinBannerGraph({
           selectedMenuType={selectedMenuType}
           menuClickHandler={menuClickHandler}
         />
-        {isLoading && (
-          <div className="absolute flex-center flex-col w-full h-[220px] text-gray-100">
-            <img className="w-10 h-10" alt="로딩 스피너" src={LoadingSpinner} />
-            <p className="mt-2 mb-6">Loading...</p>
-          </div>
-        )}
+        {isError && <Error />}
+        {isLoading && <Loading />}
         <svg
           data-testid="coin-banner-graph"
           ref={svgRef}

@@ -64,7 +64,7 @@ function CoinBannerSection() {
   }, [coinIndex]);
 
   return (
-    <section className="flex justify-between items-center w-full bg-gray-700 h-[345px] px-5 py-7 rounded-md">
+    <section className="flex overflow-hidden justify-between items-center w-full bg-gray-700 h-[345px] px-5 py-7 rounded-md">
       <button
         onClick={onLeftButtonClick}
         className="w-10 h-10 pr-[2px] bg-gray-800 rounded-md flex-center"

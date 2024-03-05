@@ -1,29 +1,17 @@
-import { CoinDetailInfoType, timeDataType } from "@/common/types/data.type";
+import { CoinDetailInfoType } from "@/common/types/data.type";
 import CoinTitle from "../../ui/CoinTitle";
 import { detailChartInfoList, detailChartMenuList } from "../Detail.data";
 import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
 
 type Props = {
-  coinInfo: CoinDetailInfoType;
-  timeData: timeDataType;
+  profileData: CoinDetailInfoType;
 };
 
-function DetailProfileChange({ coinInfo, timeData }: Props) {
-  const timerData = detailChartInfoList.map(({ title, info }) => {
-    let changeElement = <></>;
-    if (info === "OPENHOUR" || info === "OPEN24HOUR") {
-      changeElement = formatPercentageElement(coinInfo.coinDetail[info]);
-    } else if (info === "week" || info === "month") {
-      changeElement = formatPercentageElement(timeData[info]);
-    }
-
-    return { title, changeElement };
-  });
-
+function DetailProfileChange({ profileData }: Props) {
   return (
     <>
       <div className="mb-[25px]">
-        <CoinTitle displayCoin={coinInfo.coinInfo} />
+        <CoinTitle displayCoin={profileData.coinInfo} />
       </div>
       <ul className="flex mb-8">
         {detailChartMenuList.map(({ title, info }) => (
@@ -32,19 +20,19 @@ function DetailProfileChange({ coinInfo, timeData }: Props) {
             className="relative flex flex-col items-center w-[200px]"
           >
             <h4 className="text-gray-200">{title}</h4>
-            <p className="text-gray-100">{coinInfo.coinDetail[info]}</p>
+            <p className="text-gray-100">{profileData.coinDetail[info]}</p>
             <div className="absolute w-full h-[25px] inset-y-0 my-auto border-l border-gray-500 last:border-r"></div>
           </li>
         ))}
       </ul>
       <ul className="flex gap-5">
-        {timerData.map(({ title, changeElement }) => (
+        {detailChartInfoList.map(({ title, info }) => (
           <li
             key={title}
             className="flex justify-between items-center rounded-sm px-5 h-[35px] w-[190px] bg-gray-600"
           >
             <p>{title}</p>
-            {changeElement}
+            {formatPercentageElement(profileData.coinDetail[info])}
           </li>
         ))}
       </ul>

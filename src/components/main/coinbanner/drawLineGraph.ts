@@ -25,8 +25,9 @@ export function drawLineGraph(
   if (!container) return;
   if (timeType === "monthDay") return;
   const svg = select(container);
+  svg.selectAll("*").remove();
 
-  const margin = { top: 5, right: 25, left: 45, bottom: 50 };
+  const margin = { top: 5, right: 25, left: 45, bottom: 45 };
   const axisXHeight = 20;
   const barWidth = graphDataList[timeType].barWidth;
   const width = svgWidth - margin.left - margin.right;

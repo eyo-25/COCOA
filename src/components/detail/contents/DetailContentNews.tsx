@@ -2,8 +2,9 @@ import { useCoinCategoriesNews } from "@/common/apis/api";
 import { useEffect, useState } from "react";
 import { NewsListType } from "@/common/types/data.type";
 import { useParams } from "react-router-dom";
-import NewsCardList from "./NewsCardList";
+import NewsCardList from "../../ui/NewsCardList";
 import { getNewsData } from "@/common/utils/getNewsData";
+import NewsListSkeleton from "@/components/ui/NewsCardListSkeleton";
 
 function DetailContentNews() {
   const { coinSymbol } = useParams();
@@ -17,7 +18,7 @@ function DetailContentNews() {
 
   return (
     <>
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <NewsListSkeleton />}
       {0 < newsList.length && <NewsCardList newsList={newsList} />}
     </>
   );

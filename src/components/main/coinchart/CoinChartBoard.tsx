@@ -68,38 +68,27 @@ function CoinChartBoard({ chartData }: Props) {
   };
 
   return (
-    <table className="flex flex-col w-full h-full">
-      <thead>
-        <tr className="flex w-full mt-5 mb-3">
-          {chartMenuList.map(({ label, width }) => (
-            <th className="t-menu" style={{ width: `${width}%` }} key={label}>
-              {label}
-            </th>
+    <tbody className="flex flex-col w-full">
+      {formattedChart.map((coin, index) => (
+        <tr
+          key={index}
+          onClick={() => onClickHandler(coin.Internal)}
+          className="flex w-full py-2 rounded-lg cursor-pointer hover:bg-gray-500/30"
+        >
+          {chartMenuList.map(({ type, width, className }) => (
+            <td
+              className={`flex items-center ${
+                type !== "Name" && "border-r border-gray-500"
+              } ${className}`}
+              style={{ width: `${width}%` }}
+              key={type}
+            >
+              {type === "Name" ? nameTd(coin) : coin?.[type]}
+            </td>
           ))}
         </tr>
-      </thead>
-      <tbody className="flex flex-col w-full">
-        {formattedChart.map((coin, index) => (
-          <tr
-            key={index}
-            onClick={() => onClickHandler(coin.Internal)}
-            className="flex w-full py-2 rounded-lg cursor-pointer hover:bg-gray-500/30"
-          >
-            {chartMenuList.map(({ type, width, className }) => (
-              <td
-                className={`flex items-center ${
-                  type !== "Name" && "border-r border-gray-500"
-                } ${className}`}
-                style={{ width: `${width}%` }}
-                key={type}
-              >
-                {type === "Name" ? nameTd(coin) : coin?.[type]}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+      ))}
+    </tbody>
   );
 }
 
