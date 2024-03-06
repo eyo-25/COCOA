@@ -113,7 +113,7 @@ export interface WebsocketDataType {
   PRICE?: number;
 }
 
-export type TimeType = "hour" | "day" | "week" | "month" | "monthDay";
+export type TimeType = "hour" | "day" | "week" | "month";
 export type TimeHistory = "histominute" | "histohour" | "histoday";
 export type TimeParamsType = {
   [Key in TimeType]: {

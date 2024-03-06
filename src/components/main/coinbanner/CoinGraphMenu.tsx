@@ -8,7 +8,7 @@ type Props = {
 
 function CoinGraphMenu({ selectedMenuType, menuClickHandler }: Props) {
   return (
-    <ul className="flex mb-[15px] mt-4 text-sm text-gray-300">
+    <ul className="flex mb-[15px] text-sm text-gray-300">
       {graphMenuList.map(({ title, timeType }, i) => (
         <li
           className="w-20 h-4 border-l border-gray-300 flex-center last:border-r"

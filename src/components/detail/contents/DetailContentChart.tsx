@@ -47,8 +47,8 @@ function DetailContentChart({ coinSymbol }: Props) {
   }, [selectedMenuType]);
 
   return (
-    <div className="w-full h-[400px] overflow-hidden bg-gray-700 rounded-md px-11 pt-10 pb-11">
-      <h2 className="text-xl font-bold text-gray-100">시세차트</h2>
+    <div className="relative w-full pt-10 overflow-hidden bg-gray-700 rounded-md px-11 pb-11">
+      <h2 className="mb-5 text-xl font-bold text-gray-100">시세차트</h2>
       <CoinGraphMenu
         selectedMenuType={selectedMenuType}
         menuClickHandler={graphMenuClickHandler}

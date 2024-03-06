@@ -7,12 +7,15 @@ import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
 import { getChartData } from "@/common/utils/getChartData";
 import { useCoinTrends } from "@/common/apis/useCoinTrends";
 import CoinChartSkeleton from "./CoinChartSkeleton";
+import Error from "@/components/ui/Error";
 
 function CoinChartSection() {
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
   const [coinList, setCoinList] = useState<string[]>([]);
   const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
-  const { data, isLoading } = useCoinTrends(menuList[selectedMenuId].url);
+  const { data, isLoading, error } = useCoinTrends(
+    menuList[selectedMenuId].url
+  );
   const socketRef = useRef<WebSocket | null>(null);
 
   const menuClickHandler = (id: number) => {
@@ -110,26 +113,36 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      <div className="w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md pt-5 px-7">
-        <table className="flex flex-col w-full h-full">
-          <thead>
-            <tr className="flex w-full mb-3">
-              {chartMenuList.map(({ label, width }) => (
-                <th
-                  className="t-menu"
-                  style={{ width: `${width}%` }}
-                  key={label}
-                >
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          {isLoading && <CoinChartSkeleton />}
-          {data && 0 < chartData.length && (
-            <CoinChartBoard chartData={chartData} />
-          )}
-        </table>
+      <div className="flex flex-col w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md pt-5 px-7">
+        {error && (
+          <div className="w-full h-full flex-center">
+            <Error />
+          </div>
+        )}
+        {data && chartData.length <= 0 && (
+          <div className="w-full h-full flex-center">
+            <Error text="데이터가 존재하지 않습니다." />
+          </div>
+        )}
+        {data && 0 <= chartData.length && (
+          <table className="flex flex-col w-full h-full">
+            <thead>
+              <tr className="flex w-full mb-3">
+                {chartMenuList.map(({ label, width }) => (
+                  <th
+                    className="t-menu"
+                    style={{ width: `${width}%` }}
+                    key={label}
+                  >
+                    {label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            {isLoading && <CoinChartSkeleton />}
+            {data && <CoinChartBoard chartData={chartData} />}
+          </table>
+        )}
       </div>
     </section>
   );

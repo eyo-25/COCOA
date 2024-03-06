@@ -4,6 +4,9 @@ import { CoininfoType, TimeType } from "@/common/types/data.type";
 import CoinBannerGraph from "./CoinBannerGraph";
 import { randomNumberGenerator } from "@/common/utils/randomNumberGenerator";
 import { useCoinTrends } from "@/common/apis/useCoinTrends";
+import { Link } from "react-router-dom";
+import CoinTitle from "@/components/ui/CoinTitle";
+import { PlayIcon, StopIcon } from "@/common/assets";
 
 function CoinBannerSection() {
   const [isBannerStop, setIsBannerStop] = useState<boolean>(false);
@@ -27,6 +30,10 @@ function CoinBannerSection() {
 
     setIsBannerStop(false);
     timerId.current = timer;
+  };
+  const onBannerStart = () => {
+    if (!isBannerStop) return;
+    timerReset();
   };
 
   const onLeftButtonClick = () => {
@@ -64,7 +71,7 @@ function CoinBannerSection() {
   }, [coinIndex]);
 
   return (
-    <section className="flex overflow-hidden justify-between items-center w-full bg-gray-700 h-[345px] px-5 py-7 rounded-md">
+    <section className="flex items-center justify-between w-full px-5 overflow-hidden bg-gray-700 rounded-md py-7">
       <button
         onClick={onLeftButtonClick}
         className="w-10 h-10 pr-[2px] bg-gray-800 rounded-md flex-center"
@@ -72,14 +79,38 @@ function CoinBannerSection() {
         <IoChevronBack className="w-6 h-6 mx-auto" />
       </button>
       {0 < coinList.length && (
-        <CoinBannerGraph
-          isBannerStop={isBannerStop}
-          displayCoin={coinList[coinIndex]}
-          selectedMenuType={selectedMenuType}
-          setSelectedMenuType={setSelectedMenuType}
-          timerStop={timerStop}
-          timerReset={timerReset}
-        />
+        <div className="flex flex-col relative w-[780px] mx-auto pl-4">
+          <div className="relative flex items-center justify-between mb-5">
+            <Link
+              className="pr-3 rounded-md hover:bg-gray-500/30"
+              to={`/assets/${coinList[coinIndex].Internal}`}
+            >
+              <CoinTitle displayCoin={coinList[coinIndex]} />
+            </Link>
+            <div className="flex gap-2">
+              <button className="flex-center pb-[0.5px] w-[29px] h-[29px] bg-gray-800 rounded-full">
+                <StopIcon
+                  onClick={timerStop}
+                  fill={isBannerStop ? "#E9E9E9" : "#757575"}
+                />
+              </button>
+              <button className="flex-center pl-1 w-[29px] h-[29px] bg-gray-800 rounded-full">
+                <PlayIcon
+                  onClick={onBannerStart}
+                  fill={isBannerStop ? "#757575" : "#E9E9E9"}
+                />
+              </button>
+            </div>
+          </div>
+          <CoinBannerGraph
+            isBannerStop={isBannerStop}
+            displayCoin={coinList[coinIndex]}
+            selectedMenuType={selectedMenuType}
+            setSelectedMenuType={setSelectedMenuType}
+            timerStop={timerStop}
+            timerReset={timerReset}
+          />
+        </div>
       )}
       <button
         onClick={onRightButtonClick}
