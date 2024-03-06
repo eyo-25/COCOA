@@ -1,36 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 
 import "./index.css";
-import Layout from "./Layout";
-import MainPage from "./pages/MainPage";
-import CoinDetailPage from "./pages/CoinDetailPage";
-import NewsPage from "./pages/NewsPage";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "",
-        element: <MainPage />,
-      },
-      {
-        path: "assets/:coinSymbol",
-        element: <CoinDetailPage />,
-      },
-      {
-        path: "news",
-        element: <NewsPage />,
-      },
-    ],
-  },
-]);
+import SwrconfigContext from "./common/context/SwrconfigContext";
+import { router } from "./router";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <SwrconfigContext>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </SwrconfigContext>
+  // </React.StrictMode>
 );

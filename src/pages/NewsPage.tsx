@@ -1,5 +1,11 @@
+import NewsSection from "@/components/news/NewsSection";
+
 function NewsPage() {
-  return <>NewsPage</>;
+  return (
+    <>
+      <NewsSection />
+    </>
+  );
 }
 
 export default NewsPage;

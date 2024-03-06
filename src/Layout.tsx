@@ -1,12 +1,12 @@
-import Logo from "@/common/assets/logo.svg?react";
 import { Outlet } from "react-router-dom";
+import Header from "./components/ui/Header";
 
 function Layout() {
   return (
-    <>
-      <Logo />
+    <main className="flex flex-col max-w-5xl px-8 mx-auto mb-3">
+      <Header />
       <Outlet />
-    </>
+    </main>
   );
 }
 
