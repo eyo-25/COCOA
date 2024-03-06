@@ -59,7 +59,7 @@ function NewsCardList({ newsList }: Props) {
             <div className="absolute w-8 h-8 bg-gray-800 rounded-md opacity-80 right-2 top-2 flex-center">
               <ArrowUpRight className="w-4 h-4 mx-auto" />
             </div>
-            <div className="absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-green/20 from-10% to-green/0 to-100% rounded-b-md"></div>
+            <div className="absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-green/15 from-10% to-green/0 to-100% rounded-b-md"></div>
             <img
               ref={(el) => (imageListRef.current[index] = el)}
               data-src={data.imageurl}

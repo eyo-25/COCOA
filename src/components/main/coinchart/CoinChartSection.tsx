@@ -113,36 +113,28 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      <div className="flex flex-col w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md pt-5 px-7">
-        {error && (
-          <div className="w-full h-full flex-center">
-            <Error />
-          </div>
-        )}
+      <div className="relative flex flex-col w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md pt-5 px-7">
+        {error && <Error style="pt-[80px]" />}
         {data && chartData.length <= 0 && (
-          <div className="w-full h-full flex-center">
-            <Error text="데이터가 존재하지 않습니다." />
-          </div>
+          <Error style="pt-[80px]" text="데이터가 존재하지 않습니다." />
         )}
-        {data && 0 <= chartData.length && (
-          <table className="flex flex-col w-full h-full">
-            <thead>
-              <tr className="flex w-full mb-3">
-                {chartMenuList.map(({ label, width }) => (
-                  <th
-                    className="t-menu"
-                    style={{ width: `${width}%` }}
-                    key={label}
-                  >
-                    {label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            {isLoading && <CoinChartSkeleton />}
-            {data && <CoinChartBoard chartData={chartData} />}
-          </table>
-        )}
+        <table className="flex flex-col w-full h-full">
+          <thead>
+            <tr className="flex w-full mb-3">
+              {chartMenuList.map(({ label, width }) => (
+                <th
+                  className="t-menu"
+                  style={{ width: `${width}%` }}
+                  key={label}
+                >
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {isLoading && <CoinChartSkeleton />}
+          {data && <CoinChartBoard chartData={chartData} />}
+        </table>
       </div>
     </section>
   );

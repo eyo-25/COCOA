@@ -1,6 +1,6 @@
 function DetailProfileSkeleton() {
   return (
-    <div className="flex-col flex-center opacity-70">
+    <div className="flex-col flex-center opacity-60">
       <div className="mb-[25px]">
         <div className="h-[35px] w-36 bg-gray-600 rounded-md"></div>
       </div>

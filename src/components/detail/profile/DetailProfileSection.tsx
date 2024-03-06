@@ -36,12 +36,12 @@ function DetailProfileSection() {
     <section className="relative flex-col w-full min-h-[255px] py-10 bg-gray-700 rounded-md flex-center">
       <Link
         to="/"
-        className="absolute left-5 top-5 w-9 h-9 pr-[2px] bg-gray-800 rounded-md flex-center"
+        className="absolute z-10 left-5 top-5 w-9 h-9 pr-[2px] bg-gray-800 rounded-md flex-center"
       >
         <IoChevronBack className="w-6 h-6 mx-auto" />
       </Link>
       <p className="absolute text-sm right-6 top-5">CCCAGG 기준</p>
-      {isError && <Error />}
+      {isError && <Error style="pt-[20px]" />}
       {isLoading && <DetailProfileSkeleton />}
       {!isLoading && profileData && (
         <DetailProfileChange profileData={profileData} />

@@ -64,7 +64,7 @@ function CoinBannerGraph({
         selectedMenuType={selectedMenuType}
         menuClickHandler={menuClickHandler}
       />
-      {isError && <Error />}
+      {isError && <Error style="pt-[80px]" />}
       {isLoading && <Loading />}
       <svg
         data-testid="coin-banner-graph"

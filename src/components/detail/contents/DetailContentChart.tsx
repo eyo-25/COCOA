@@ -53,7 +53,7 @@ function DetailContentChart({ coinSymbol }: Props) {
         selectedMenuType={selectedMenuType}
         menuClickHandler={graphMenuClickHandler}
       />
-      {isError && <Error />}
+      {isError && <Error style="pt-[80px]" />}
       {isLoading && <Loading />}
       <svg ref={svgRef} viewBox={`0 0 ${800} ${230}`}></svg>
     </div>

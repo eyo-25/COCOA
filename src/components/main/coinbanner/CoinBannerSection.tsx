@@ -78,16 +78,16 @@ function CoinBannerSection() {
       >
         <IoChevronBack className="w-6 h-6 mx-auto" />
       </button>
-      {0 < coinList.length && (
+      {0 < coinList.length ? (
         <div className="flex flex-col relative w-[780px] mx-auto pl-4">
           <div className="relative flex items-center justify-between mb-5">
             <Link
-              className="pr-3 rounded-md hover:bg-gray-500/30"
+              className="z-10 pr-3 rounded-md hover:bg-gray-500/30"
               to={`/assets/${coinList[coinIndex].Internal}`}
             >
               <CoinTitle displayCoin={coinList[coinIndex]} />
             </Link>
-            <div className="flex gap-2">
+            <div className="z-10 flex gap-2">
               <button className="flex-center pb-[0.5px] w-[29px] h-[29px] bg-gray-800 rounded-full">
                 <StopIcon
                   onClick={timerStop}
@@ -111,6 +111,8 @@ function CoinBannerSection() {
             timerReset={timerReset}
           />
         </div>
+      ) : (
+        <svg className="mt-[62px]" viewBox={`0 0 ${765} ${220}`}></svg>
       )}
       <button
         onClick={onRightButtonClick}
