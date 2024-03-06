@@ -1,3 +1,12 @@
+export type detailChartMenu = {
+  title: string;
+  info: "PRICE" | "MKTCAP" | "SUPPLY";
+};
+export type detailChartInfo = {
+  title: string;
+  info: "OPENHOUR" | "OPEN24HOUR" | "OPENWEEK" | "OPENMONTH";
+};
+
 export type CoininfoType = {
   Id: string;
   FullName: string;
@@ -18,6 +27,7 @@ interface ExtendCoininfoType extends CoininfoType {
 }
 
 export interface CoinDetailDataType {
+  Message: string;
   Response: string;
   Data: {
     CoinInfo: ExtendCoininfoType;
@@ -38,6 +48,8 @@ export interface CoinDetailInfoType {
     MKTCAP: string;
     OPENHOUR: number;
     OPEN24HOUR: number;
+    OPENWEEK: number;
+    OPENMONTH: number;
   };
 }
 
@@ -57,9 +69,9 @@ export interface CoinFilterdDataType {
   };
 }
 export interface CoinChartDataType extends CoininfoType {
-  MKTCAP: string;
-  SUPPLY: string;
-  PRICE: string;
+  MKTCAP: number;
+  SUPPLY: number;
+  PRICE: number;
   OPENHOUR: number;
   OPEN24HOUR: number;
   OPENDAY: number;
@@ -83,13 +95,25 @@ export interface MenuType {
   title: string;
   url: string;
 }
+export interface FormattenChartType {
+  PRICE: string;
+  OPENHOUR: JSX.Element;
+  OPEN24HOUR: JSX.Element;
+  OPENDAY: JSX.Element;
+  SUPPLY: string;
+  MKTCAP: string;
+  Id: string;
+  FullName: string;
+  Internal: string;
+  ImageUrl: string;
+}
 
 export interface WebsocketDataType {
   FROMSYMBOL: string;
   PRICE?: number;
 }
 
-export type TimeType = "hour" | "day" | "week" | "month" | "monthDay";
+export type TimeType = "hour" | "day" | "week" | "month";
 export type TimeHistory = "histominute" | "histohour" | "histoday";
 export type TimeParamsType = {
   [Key in TimeType]: {
@@ -108,6 +132,8 @@ export interface OHLCVType {
   close: number;
 }
 export interface OHLCVDataType {
+  Message: string;
+  Response: string;
   Data: {
     Data: OHLCVType[];
   };
@@ -142,3 +168,13 @@ export interface NewsListType {
   categories: string;
   source: string;
 }
+
+export interface CustomError {
+  message: string;
+  type: string;
+}
+
+export type timeDataType = {
+  week: number;
+  month: number;
+};

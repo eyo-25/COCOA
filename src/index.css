@@ -6,14 +6,18 @@ body {
   background-color: #111111;
   color: #757575;
   font-family: "Noto Sans KR", sans-serif;
-  touch-action: none;
+  /* touch-action: none;
   overscroll-behavior-y: none;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; */
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 @layer utilities {

@@ -27,7 +27,7 @@ export function drawLineGraph(
   const svg = select(container);
   svg.selectAll("*").remove();
 
-  const margin = { top: 5, right: 25, left: 45, bottom: 50 };
+  const margin = { top: 5, right: 25, left: 45, bottom: 45 };
   const axisXHeight = 20;
   const barWidth = graphDataList[timeType].barWidth;
   const width = svgWidth - margin.left - margin.right;
@@ -242,8 +242,6 @@ export function drawLineGraph(
     .attr("font-size", "12px")
     .attr("font-weight", 700)
     .attr("fill", "#111111");
-
-  mouseTrackerGroup.raise();
 
   mouseTrackerGroup
     .on("mouseleave", () => {

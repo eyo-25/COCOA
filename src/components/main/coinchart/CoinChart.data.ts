@@ -11,7 +11,7 @@ export const menuList = [
     url: "/mktcapfull",
   },
   {
-    title: "상위티어 거래량",
+    title: "인기거래 목록",
     url: "/totaltoptiervolfull",
   },
   {
@@ -75,7 +75,6 @@ export const timeTypeList: TimeParamsType = {
   day: { type: "histominute", limit: 144, aggregate: 10 },
   week: { type: "histohour", limit: 168, aggregate: 1 },
   month: { type: "histohour", limit: 120, aggregate: 6 },
-  monthDay: { type: "histoday", limit: 30, aggregate: 1 },
 };
 export const graphDataList = {
   hour: { barWidth: 9, dateFormat: "HH:MM" },
@@ -139,4 +138,5 @@ export const koreanCoinName: KoreanCoinNameType = {
   FIL: "파일코인",
   XMR: "모네로",
   WLD: "월드코인",
+  FDUSD: "FDUSD",
 };

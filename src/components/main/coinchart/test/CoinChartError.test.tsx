@@ -15,7 +15,7 @@ test("handler 에러 테스트", async () => {
 
   // 에러 텍스트 확인
   const errorMsg = await screen.findByText(
-    "An unexpected error occurred. Please try again later."
+    "에러가 발생했습니다. 다시 시도해 주세요."
   );
 
   expect(errorMsg).toBeInTheDocument();

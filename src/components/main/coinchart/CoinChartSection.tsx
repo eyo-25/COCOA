@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+
 import CoinChartBoard from "./CoinChartBoard";
 import CoinChartMenu from "../../ui/CoinChartMenu";
-import { useCoinTrends } from "@/common/apis/api";
-import { menuList } from "./CoinChart.data";
+import { chartMenuList, menuList } from "./CoinChart.data";
 import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
 import { getChartData } from "@/common/utils/getChartData";
+import { useCoinTrends } from "@/common/apis/useCoinTrends";
+import CoinChartSkeleton from "./CoinChartSkeleton";
+import Error from "@/components/ui/Error";
 
 function CoinChartSection() {
-  const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
-  const [coinList, setCoinList] = useState<string[]>([]);
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
+  const [coinList, setCoinList] = useState<string[]>([]);
+  const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
   const { data, isLoading, error } = useCoinTrends(
     menuList[selectedMenuId].url
   );
@@ -20,13 +23,29 @@ function CoinChartSection() {
     setSelectedMenuId(id);
   };
 
+  const receiveDataChange = (receivedData: WebsocketDataType) => {
+    if (!receivedData.PRICE || !data) return;
+
+    const copy = [...chartData];
+    const index = copy.findIndex(
+      (item) => item.Internal === receivedData.FROMSYMBOL
+    );
+    const cu = copy[index];
+    copy[index] = { ...cu, PRICE: receivedData.PRICE };
+
+    setChartData(copy);
+  };
+
   useEffect(() => {
     if (!data) return;
 
-    const res = getChartData(data);
-    const nameList = res.map((item) => item.Internal);
+    const chatDataRes = getChartData(data);
+    const nameList = chatDataRes.map((item) => item.Internal);
+
+    setChartData(chatDataRes);
 
     if (!socketRef.current) {
+      setCoinList(nameList);
       const newWebSocket = new WebSocket(
         `${import.meta.env.VITE_WEBSOCKET_URL}?api_key=${
           import.meta.env.VITE_API_KEY
@@ -40,16 +59,6 @@ function CoinChartSection() {
           subs: subscriptions,
         };
         newWebSocket.send(JSON.stringify(subscriptionMessage));
-      };
-
-      newWebSocket.onmessage = (event) => {
-        if (!data) return;
-        const receivedData: WebsocketDataType = JSON.parse(event.data);
-
-        if (!receivedData.PRICE) return;
-
-        const res = getChartData(data, receivedData);
-        setChartData(res);
       };
 
       socketRef.current = newWebSocket;
@@ -78,29 +87,22 @@ function CoinChartSection() {
         };
         socketRef.current.send(JSON.stringify(subscriptionMessage));
       }
-
-      if (0 < newSubscriptions.length || 0 < unsubscriptions.length) {
-        socketRef.current.onmessage = (event) => {
-          if (!data) return;
-
-          const receivedData: WebsocketDataType = JSON.parse(event.data);
-          if (!receivedData.PRICE) return;
-
-          const res = getChartData(data, receivedData);
-          setChartData(res);
-        };
-      }
     }
-
-    setChartData(res);
-    setCoinList(nameList);
   }, [data]);
 
   useEffect(() => {
+    if (!socketRef.current) return;
+
+    socketRef.current.onmessage = (event) => {
+      const receivedData: WebsocketDataType = JSON.parse(event.data);
+
+      receiveDataChange(receivedData);
+    };
+  }, [chartData]);
+
+  useEffect(() => {
     return () => {
-      if (!socketRef.current) return;
-      socketRef.current.close();
-      socketRef.current = null;
+      if (socketRef.current) socketRef.current.close();
     };
   }, []);
 
@@ -111,19 +113,29 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      {error ? (
-        <div>An unexpected error occurred. Please try again later.</div>
-      ) : (
-        <div className="w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md px-7">
-          {isLoading ? (
-            <div>Loading...</div>
-          ) : 0 < chartData.length ? (
-            <CoinChartBoard chartData={chartData} />
-          ) : (
-            <p>데이터가 존재하지 않습니다.</p>
-          )}
-        </div>
-      )}
+      <div className="relative flex flex-col w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md pt-5 px-7">
+        {error && <Error style="pt-[80px]" />}
+        {data && chartData.length <= 0 && (
+          <Error style="pt-[80px]" text="데이터가 존재하지 않습니다." />
+        )}
+        <table className="flex flex-col w-full h-full">
+          <thead>
+            <tr className="flex w-full mb-3">
+              {chartMenuList.map(({ label, width }) => (
+                <th
+                  className="t-menu"
+                  style={{ width: `${width}%` }}
+                  key={label}
+                >
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {isLoading && <CoinChartSkeleton />}
+          {data && <CoinChartBoard chartData={chartData} />}
+        </table>
+      </div>
     </section>
   );
 }
