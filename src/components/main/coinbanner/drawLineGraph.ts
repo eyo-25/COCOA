@@ -23,7 +23,6 @@ export function drawLineGraph(
   data: OHLCVType[]
 ) {
   if (!container) return;
-  if (timeType === "monthDay") return;
   const svg = select(container);
   svg.selectAll("*").remove();
 
