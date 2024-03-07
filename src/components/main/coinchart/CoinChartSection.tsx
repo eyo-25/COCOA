@@ -42,10 +42,7 @@ function CoinChartSection() {
     const chatDataRes = getChartData(data);
     const nameList = chatDataRes.map((item) => item.Internal);
 
-    setChartData(chatDataRes);
-
     if (!socketRef.current) {
-      setCoinList(nameList);
       const newWebSocket = new WebSocket(
         `${import.meta.env.VITE_WEBSOCKET_URL}?api_key=${
           import.meta.env.VITE_API_KEY
@@ -88,6 +85,9 @@ function CoinChartSection() {
         socketRef.current.send(JSON.stringify(subscriptionMessage));
       }
     }
+
+    setCoinList(nameList);
+    setChartData(chatDataRes);
   }, [data]);
 
   useEffect(() => {
