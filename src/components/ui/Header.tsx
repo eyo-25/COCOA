@@ -26,9 +26,6 @@ function Header() {
         >
           뉴스
         </Link>
-        <button className="px-3 py-1 font-bold text-gray-800 rounded bg-green">
-          로그인
-        </button>
       </nav>
     </header>
   );
