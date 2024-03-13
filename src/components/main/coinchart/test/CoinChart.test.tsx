@@ -9,7 +9,6 @@ test("비동기 요청 테스트", async () => {
   const coinImage: HTMLImageElement[] = await screen.findAllByTestId(
     "coin-icon"
   );
-  screen.debug();
   expect(coinImage).toHaveLength(2);
 
   // 이미지 대체 텍스트 확인
