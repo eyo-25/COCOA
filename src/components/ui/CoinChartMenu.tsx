@@ -8,7 +8,7 @@ type Props = {
 
 function CoinChartMenu({ menuList, selectedMenuId, menuClickHandler }: Props) {
   return (
-    <div className="flex justify-between mt-6 mb-5">
+    <div className="flex justify-between my-5 tablet:my-[18px] mini:my-4 mobile:my-3">
       <ul className="flex flex-wrap gap-3">
         {menuList.map(({ title }, i) => (
           <li key={title + i}>

@@ -3,6 +3,7 @@ import {
   ChartMenuType,
   KoreanCoinNameType,
   TimeParamsType,
+  ResponsiveType,
 } from "@/common/types/data.type";
 
 export const menuList = [
@@ -31,44 +32,68 @@ export const detailMenuList = [
 ];
 
 export const chartMenuList: ChartMenuType[] = [
-  { type: "Name", label: "암호화 화폐", width: 24, className: "" },
+  { type: "Name", label: "암호화 화폐", className: "" },
   {
     type: "PRICE",
     label: "가격",
-    width: 16,
     className: "justify-end pr-[15px] text-gray-100",
   },
   {
     type: "OPENHOUR",
     label: "1H",
-    width: 12,
+
     className: "justify-center",
   },
   {
     type: "OPEN24HOUR",
     label: "24H",
-    width: 12,
+
     className: "justify-center",
   },
   {
     type: "OPENDAY",
     label: "1D",
-    width: 12,
+
     className: "justify-center",
   },
   {
     type: "SUPPLY",
     label: "총 공급량",
-    width: 12,
+
     className: "justify-center text-gray-100",
   },
   {
     type: "MKTCAP",
     label: "시가총액",
-    width: 12,
+
     className: "justify-center text-gray-100",
   },
 ];
+
+export const chartSkeletonWidthList: { [Key in ResponsiveType]: number } = {
+  max: 920,
+  xl: 920,
+  lg: 740,
+  base: 770,
+  sm: 540,
+  xs: 460,
+};
+export const screenSizeOffset: { [Key in ResponsiveType]: number } = {
+  max: 7,
+  xl: 6,
+  lg: 5,
+  base: 4,
+  sm: 3,
+  xs: 2,
+};
+export const chartWidthList: { [Key in ResponsiveType]: number[] } = {
+  max: [26, 16.5, 11.5, 11.5, 11.5, 11.5, 11.5],
+  xl: [28, 18, 13.5, 13.5, 13.5, 13.5],
+  lg: [34.5, 22, 14.5, 14.5, 14.5],
+  base: [40, 24, 18, 18],
+  sm: [48, 30, 22],
+  xs: [65, 35],
+};
 
 export const timeTypeList: TimeParamsType = {
   hour: { type: "histominute", limit: 60, aggregate: 1 },
@@ -138,5 +163,6 @@ export const koreanCoinName: KoreanCoinNameType = {
   FIL: "파일코인",
   XMR: "모네로",
   WLD: "월드코인",
-  FDUSD: "FDUSD",
+  FDUSD: "퍼스트 디지털 USD",
+  POL: "폴리곤 에코시스템 토큰",
 };

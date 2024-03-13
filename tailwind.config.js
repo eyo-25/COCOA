@@ -3,6 +3,11 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      screens: {
+        tablet: { raw: "(max-width: 1024px)" },
+        mini: { raw: "(max-width: 768px)" },
+        mobile: { raw: "(max-width: 450px)" },
+      },
       colors: {
         green: "#00FFA3",
         red: "#FF3464",

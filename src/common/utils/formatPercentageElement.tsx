@@ -1,5 +1,7 @@
+import { koreanNumberFormatter } from "./koreanNumberFormatter";
+
 export const formatPercentageElement = (num: number) => {
-  const fixedNum = num.toFixed(2);
+  const fixedNum = 10000 < num ? koreanNumberFormatter(num) : num.toFixed(2);
 
   if (fixedNum === "0.00" || fixedNum === "-0.00") {
     return <p className="text-gray-200">{fixedNum.replace("-", "")}%</p>;

@@ -88,7 +88,6 @@ export type ChartMenu =
 export interface ChartMenuType {
   type: ChartMenu;
   label: string;
-  width: number;
   className: string;
 }
 export interface MenuType {
@@ -178,3 +177,5 @@ export type timeDataType = {
   week: number;
   month: number;
 };
+
+export type ResponsiveType = "xs" | "sm" | "base" | "lg" | "xl" | "max";
