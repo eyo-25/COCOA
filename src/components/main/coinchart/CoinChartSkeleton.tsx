@@ -1,38 +1,40 @@
 import { motion } from "framer-motion";
+import { chartSkeletonWidthList, chartWidthList } from "./CoinChart.data";
+import { ResponsiveType } from "@/common/types/data.type";
 
-const overlayVariants = {
-  animate: {
-    left: [-100, 280],
-    transition: { duration: 1, repeat: Infinity, type: "linear" },
-  },
+type Props = {
+  screenSize: ResponsiveType;
 };
 
-const overlayVariants2 = {
-  animate: {
-    left: [-100, 700],
-    transition: { duration: 1, repeat: Infinity, type: "linear" },
-  },
-};
+function CoinChartSkeleton({ screenSize }: Props) {
+  const overlayVariants = {
+    animate: {
+      left: [-100, chartSkeletonWidthList[screenSize]],
+      transition: { duration: 1, repeat: Infinity, type: "linear" },
+    },
+  };
 
-function CoinChartSkeleton() {
   return (
     <tbody>
       {Array.from({ length: 25 }, (_, index) => (
-        <tr key={index} className="relative flex h-[45px] py-2">
-          <td className="relative overflow-hidden w-[25%] rounded-sm mr-3 h-full bg-gray-650/70">
-            <motion.div
-              variants={overlayVariants}
-              animate="animate"
-              className="absolute top-[-10px] blur-[20px] z-10 w-[20px] h-[30px] rotate-[-30deg] bg-gray-600"
-            ></motion.div>
-          </td>
-          <td className="relative overflow-hidden w-[75%] rounded-sm h-full bg-gray-650/70">
-            <motion.div
-              variants={overlayVariants2}
-              animate="animate"
-              className="absolute top-[-10px] blur-[20px] z-10 w-[20px] h-[30px] rotate-[-30deg] bg-gray-600"
-            ></motion.div>
-          </td>
+        <tr key={index} className="relative overflow-hidden flex h-[34px] my-2">
+          <motion.td
+            variants={overlayVariants}
+            animate="animate"
+            className="absolute top-[-5px] z-10 w-[10px] h-[45px] blur-[10px] rotate-[30deg] bg-gray-600"
+          ></motion.td>
+          <td
+            style={{
+              width: `${chartWidthList[screenSize][0]}%`,
+            }}
+            className="relative h-full mr-3 rounded-sm bg-gray-650/70"
+          ></td>
+          <td
+            className="relative h-full rounded-sm bg-gray-650/70"
+            style={{
+              width: `${100 - chartWidthList[screenSize][0]}%`,
+            }}
+          ></td>
         </tr>
       ))}
     </tbody>

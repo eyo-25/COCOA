@@ -2,17 +2,24 @@ import { useEffect, useRef, useState } from "react";
 
 import CoinChartBoard from "./CoinChartBoard";
 import CoinChartMenu from "../../ui/CoinChartMenu";
-import { chartMenuList, menuList } from "./CoinChart.data";
+import {
+  chartMenuList,
+  chartWidthList,
+  menuList,
+  screenSizeOffset,
+} from "./CoinChart.data";
 import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
 import { getChartData } from "@/common/utils/getChartData";
 import { useCoinTrends } from "@/common/apis/useCoinTrends";
 import CoinChartSkeleton from "./CoinChartSkeleton";
 import Error from "@/components/ui/Error";
+import { useResponsive } from "@/common/hooks/useResonsive";
 
 function CoinChartSection() {
   const [selectedMenuId, setSelectedMenuId] = useState<number>(0);
   const [coinList, setCoinList] = useState<string[]>([]);
   const [chartData, setChartData] = useState<CoinChartDataType[]>([]);
+  const { screenSize } = useResponsive();
   const { data, isLoading, error } = useCoinTrends(
     menuList[selectedMenuId].url
   );
@@ -102,7 +109,12 @@ function CoinChartSection() {
 
   useEffect(() => {
     return () => {
-      if (socketRef.current) socketRef.current.close();
+      if (
+        socketRef.current &&
+        socketRef.current.readyState === WebSocket.OPEN
+      ) {
+        socketRef.current.close();
+      }
     };
   }, []);
 
@@ -113,7 +125,7 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      <div className="relative flex flex-col w-full h-full min-h-[1200px] pb-6 bg-gray-700 rounded-md pt-5 px-7">
+      <div className="relative flex flex-col w-full h-full min-h-[1200px] bg-gray-700 rounded-md py-5 mobile:py-4 px-7 tablet:px-5 mini:px-4 mobile:px-3">
         {error && <Error style="pt-[80px]" />}
         {data && chartData.length <= 0 && (
           <Error style="pt-[80px]" text="데이터가 존재하지 않습니다." />
@@ -121,19 +133,25 @@ function CoinChartSection() {
         <table className="flex flex-col w-full h-full">
           <thead>
             <tr className="flex w-full mb-3">
-              {chartMenuList.map(({ label, width }) => (
-                <th
-                  className="t-menu"
-                  style={{ width: `${width}%` }}
-                  key={label}
-                >
-                  {label}
-                </th>
-              ))}
+              {chartMenuList
+                .slice(0, screenSizeOffset[screenSize])
+                .map(({ label }, i) => (
+                  <th
+                    className="font-[500]"
+                    key={label}
+                    style={{
+                      width: `${chartWidthList[screenSize][i]}%`,
+                    }}
+                  >
+                    {label}
+                  </th>
+                ))}
             </tr>
           </thead>
-          {isLoading && <CoinChartSkeleton />}
-          {data && <CoinChartBoard chartData={chartData} />}
+          {isLoading && <CoinChartSkeleton screenSize={screenSize} />}
+          {data && (
+            <CoinChartBoard chartData={chartData} screenSize={screenSize} />
+          )}
         </table>
       </div>
     </section>

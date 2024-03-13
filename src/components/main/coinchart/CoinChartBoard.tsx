@@ -1,8 +1,14 @@
 import {
   CoinChartDataType,
   FormattenChartType,
+  ResponsiveType,
 } from "@/common/types/data.type";
-import { chartMenuList, koreanCoinName } from "./CoinChart.data";
+import {
+  chartMenuList,
+  chartWidthList,
+  koreanCoinName,
+  screenSizeOffset,
+} from "./CoinChart.data";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { priceFormatter } from "@/common/utils/priceFormatter";
@@ -12,9 +18,10 @@ import { formatPercentageElement } from "@/common/utils/formatPercentageElement"
 
 type Props = {
   chartData: CoinChartDataType[];
+  screenSize: ResponsiveType;
 };
 
-function CoinChartBoard({ chartData }: Props) {
+function CoinChartBoard({ chartData, screenSize }: Props) {
   const [formattedChart, SetFormattedChart] = useState<FormattenChartType[]>(
     []
   );
@@ -54,9 +61,9 @@ function CoinChartBoard({ chartData }: Props) {
             alt={coin.FullName}
           />
         </div>
-        <p className="mr-[6px] font-bold text-gray-100">
+        <h4 className="mr-[6px] font-bold text-gray-100">
           {koreanCoinName[coin.Internal] || coin.FullName}
-        </p>
+        </h4>
         <p className="text-xs text-gray-200">{coin.Internal}</p>
       </div>
     );
@@ -75,17 +82,21 @@ function CoinChartBoard({ chartData }: Props) {
           onClick={() => onClickHandler(coin.Internal)}
           className="flex w-full py-2 rounded-lg cursor-pointer hover:bg-gray-500/30"
         >
-          {chartMenuList.map(({ type, width, className }) => (
-            <td
-              className={`flex items-center ${
-                type !== "Name" && "border-r border-gray-500"
-              } ${className}`}
-              style={{ width: `${width}%` }}
-              key={type}
-            >
-              {type === "Name" ? nameTd(coin) : coin?.[type]}
-            </td>
-          ))}
+          {chartMenuList
+            .slice(0, screenSizeOffset[screenSize])
+            .map(({ type, className }, i) => (
+              <td
+                className={`flex items-center ${
+                  type !== "Name" && "border-r border-gray-500"
+                } ${className}`}
+                style={{
+                  width: `${chartWidthList[screenSize][i]}%`,
+                }}
+                key={type}
+              >
+                {type === "Name" ? nameTd(coin) : coin?.[type]}
+              </td>
+            ))}
         </tr>
       ))}
     </tbody>
