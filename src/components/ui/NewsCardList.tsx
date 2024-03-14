@@ -2,12 +2,15 @@ import { useEffect, useRef } from "react";
 import { NewsListType } from "@/common/types/data.type";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Placeholder } from "@/common/assets";
+import { useResponsive } from "@/common/hooks/useResonsive";
+import { newsSizeOffset } from "../main/coinchart/CoinChart.data";
 
 type Props = {
   newsList: NewsListType[];
 };
 
 function NewsCardList({ newsList }: Props) {
+  const { screenSize } = useResponsive();
   const imageListRef = useRef<Array<HTMLImageElement | null>>(
     Array.from({ length: newsList.length }, () => null)
   );
@@ -45,9 +48,14 @@ function NewsCardList({ newsList }: Props) {
   }, [newsList]);
 
   return (
-    <div className="grid grid-cols-3 gap-8 mb-8">
+    <div
+      className={`grid gap-y-6 gap-x-6 tablet:gap-x-4 mini:gap-x-3 mobile:gap-x-1  mb-8`}
+      style={{
+        gridTemplateColumns: `repeat(${newsSizeOffset[screenSize]}, 1fr)`,
+      }}
+    >
       {newsList.map((data, index) => (
-        <div key={data.id} className="flex flex-col w-[300px] mb-2">
+        <div key={data.id} className="flex flex-col w-full h-full mb-2 z-100">
           <Link
             to={data.url}
             target="_blank"
@@ -59,7 +67,7 @@ function NewsCardList({ newsList }: Props) {
             <div className="absolute w-8 h-8 bg-gray-800 rounded-md opacity-80 right-2 top-2 flex-center">
               <ArrowUpRight className="w-4 h-4 mx-auto" />
             </div>
-            <div className="absolute bottom-0 left-0 h-10 w-full bg-gradient-to-t from-green/15 from-10% to-green/0 to-100% rounded-b-md"></div>
+            <div className="absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-green/15 from-0% to-green/0 to-30% rounded-b-md"></div>
             <img
               ref={(el) => (imageListRef.current[index] = el)}
               data-src={data.imageurl}
