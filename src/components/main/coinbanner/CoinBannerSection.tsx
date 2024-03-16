@@ -73,10 +73,10 @@ function CoinBannerSection() {
   }, [coinIndex]);
 
   return (
-    <section className="flex items-center justify-between w-full px-5 mt-2 mb-1 overflow-hidden bg-gray-700 rounded-md py-7">
+    <section className="flex items-center justify-between w-full mt-2 mb-1 overflow-hidden bg-gray-700 rounded-md mini:mt-1 px-7 tablet:px-5 mini:px-4 mobile:px-3 py-7 mini:py-6">
       <Button
         onClick={onLeftButtonClick}
-        className="w-10 h-10 pr-[2px] bg-gray-800 rounded-md flex-center"
+        className="w-10 h-10 tablet:w-9 tablet:h-9 mini:w-6 mini:h-6 pr-[2px] mini:bg-inherit bg-gray-800 rounded-md flex-center"
       >
         <IoChevronBack className="w-6 h-6 mx-auto" />
       </Button>
@@ -93,13 +93,13 @@ function CoinBannerSection() {
               <div className="z-10 flex gap-2">
                 <Button
                   onClick={timerStop}
-                  className="flex-center pb-[0.5px] w-[29px] h-[29px] bg-gray-800 rounded-full"
+                  className="flex-center pb-[0.5px] w-[29px] h-[29px] mini:w-[26px] mini:h-[26px] bg-gray-800 rounded-full"
                 >
                   <StopIcon fill={isBannerStop ? "#E9E9E9" : "#757575"} />
                 </Button>
                 <Button
                   onClick={onBannerStart}
-                  className="flex-center pl-1 w-[29px] h-[29px] bg-gray-800 rounded-full"
+                  className="flex-center pl-1 w-[29px] h-[29px] mini:w-[26px] mini:h-[26px] bg-gray-800 rounded-full"
                 >
                   <PlayIcon fill={isBannerStop ? "#757575" : "#E9E9E9"} />
                 </Button>
@@ -120,7 +120,7 @@ function CoinBannerSection() {
       </div>
       <Button
         onClick={onRightButtonClick}
-        className="w-10 h-10 bg-gray-800 rounded-md flex-center pl-[2px]"
+        className="w-10 h-10 tablet:w-9 tablet:h-9 mini:w-6 mini:h-6 pr-[2px] mini:bg-inherit bg-gray-800 rounded-md flex-center pl-[2px]"
       >
         <IoChevronForward className="w-6 h-6 mx-auto" />
       </Button>

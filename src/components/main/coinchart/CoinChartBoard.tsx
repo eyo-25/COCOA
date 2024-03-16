@@ -8,7 +8,7 @@ import {
   chartMenuList,
   chartWidthList,
   koreanCoinName,
-  screenSizeOffset,
+  screenGridOffset,
 } from "./CoinChart.data";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -68,7 +68,7 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
   const nameTd = (coin: FormattenChartType) => {
     return (
       <div className="flex items-center ml-2">
-        <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full">
+        <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full mini:w-7 mini:h-7 mobile:w-6 mobile:h-6">
           <img
             data-testid="coin-icon"
             src={import.meta.env.VITE_BASE_URL + coin.ImageUrl}
@@ -97,7 +97,7 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
           className="flex w-full py-2 overflow-hidden rounded-lg cursor-pointer hover:bg-gray-500/30"
         >
           {chartMenuList
-            .slice(0, screenSizeOffset[screenSize])
+            .slice(0, screenGridOffset[screenSize])
             .map(({ type, className }, i) => (
               <motion.td
                 className={`relative flex items-center ${

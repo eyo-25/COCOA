@@ -6,7 +6,7 @@ import {
   chartMenuList,
   chartWidthList,
   menuList,
-  screenSizeOffset,
+  screenGridOffset,
 } from "./CoinChart.data";
 import { CoinChartDataType, WebsocketDataType } from "@/common/types/data.type";
 import { getChartData } from "@/common/utils/getChartData";
@@ -125,7 +125,7 @@ function CoinChartSection() {
         selectedMenuId={selectedMenuId}
         menuClickHandler={menuClickHandler}
       />
-      <div className="relative flex flex-col w-full h-full min-h-[1200px] bg-gray-700 rounded-md py-5 mobile:py-4 px-7 tablet:px-5 mini:px-4 mobile:px-3">
+      <div className="relative flex flex-col w-full h-full min-h-[1200px] mini:min-h-[1000px] mobile:min-h-[1000px] bg-gray-700 rounded-md py-5 mobile:py-4 px-7 tablet:px-5 mini:px-4 mobile:px-3">
         {error && <Error style="pt-[80px]" />}
         {data && chartData.length <= 0 && (
           <Error style="pt-[80px]" text="데이터가 존재하지 않습니다." />
@@ -134,7 +134,7 @@ function CoinChartSection() {
           <thead>
             <tr className="flex w-full mb-3">
               {chartMenuList
-                .slice(0, screenSizeOffset[screenSize])
+                .slice(0, screenGridOffset[screenSize])
                 .map(({ label }, i) => (
                   <th
                     className="font-[500]"

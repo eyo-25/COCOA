@@ -14,7 +14,6 @@ function DetailProfileSection() {
   const [profileData, setProfileData] = useState<CoinDetailInfoType>();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-
   const navigate = useNavigate();
 
   const fetchDetailProfile = async () => {

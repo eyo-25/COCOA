@@ -1,4 +1,6 @@
+import { useResponsive } from "@/common/hooks/useResonsive";
 import { motion } from "framer-motion";
+import { newsGridOffset } from "../main/coinchart/CoinChart.data";
 
 const overlayVariants = {
   animate: {
@@ -8,12 +10,19 @@ const overlayVariants = {
 };
 
 function NewsCardListSkeleton() {
+  const { screenSize } = useResponsive();
+
   return (
-    <div className="grid grid-cols-3 gap-8 mb-8 rounded-sm opacity-60">
+    <div
+      className="grid mb-8 rounded-sm gap-y-6 gap-x-6 tablet:gap-x-4 mini:gap-x-3 mobile:gap-x-1 opacity-60"
+      style={{
+        gridTemplateColumns: `repeat(${newsGridOffset[screenSize]}, 1fr)`,
+      }}
+    >
       {Array.from({ length: 20 }, (_, index) => (
         <div
           key={index}
-          className="relative overflow-hidden flex flex-col w-[300px] mb-2"
+          className="relative flex flex-col w-full mb-2 overflow-hidden"
         >
           <motion.div
             variants={overlayVariants}

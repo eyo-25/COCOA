@@ -3,7 +3,7 @@ import { NewsListType } from "@/common/types/data.type";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Placeholder } from "@/common/assets";
 import { useResponsive } from "@/common/hooks/useResonsive";
-import { newsSizeOffset } from "../main/coinchart/CoinChart.data";
+import { newsGridOffset } from "../main/coinchart/CoinChart.data";
 
 type Props = {
   newsList: NewsListType[];
@@ -49,9 +49,9 @@ function NewsCardList({ newsList }: Props) {
 
   return (
     <div
-      className={`grid gap-y-6 gap-x-6 tablet:gap-x-4 mini:gap-x-3 mobile:gap-x-1  mb-8`}
+      className={`grid gap-y-6 gap-x-6 tablet:gap-x-4 mini:gap-x-3 mobile:gap-x-1 mb-8`}
       style={{
-        gridTemplateColumns: `repeat(${newsSizeOffset[screenSize]}, 1fr)`,
+        gridTemplateColumns: `repeat(${newsGridOffset[screenSize]}, 1fr)`,
       }}
     >
       {newsList.map((data, index) => (
@@ -82,7 +82,7 @@ function NewsCardList({ newsList }: Props) {
               {data.title}
             </h4>
             <p className="text-sm ellipsis mb-[10px]">{data.body}</p>
-            <div className="flex flex-wrap overflow-hidden max-h-12 text-green">
+            <div className="flex flex-wrap overflow-hidden max-h-12 mobile:max-h-10 text-green">
               {data.tags.map((tag, i) => (
                 <span key={i} className="mr-3">
                   #{tag}
