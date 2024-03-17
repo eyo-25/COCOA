@@ -1,6 +1,6 @@
 export const priceFormatter = (price: number): string => {
   const formattedNumber = Math.round(price * 1e6) / 1e6;
-  const fractionDigits = formattedNumber > 1 ? 2 : 6;
+  const fractionDigits = formattedNumber > 10 ? 2 : 6;
 
   if (formattedNumber === 0 || formattedNumber < 0) return "-";
 

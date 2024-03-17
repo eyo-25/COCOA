@@ -20,13 +20,14 @@ export function drawLineGraph(
   container: SVGSVGElement | null,
   svgWidth: number,
   svgHeight: number,
-  data: OHLCVType[]
+  data: OHLCVType[],
+  xTick: number = 7
 ) {
   if (!container) return;
   const svg = select(container);
   svg.selectAll("*").remove();
 
-  const margin = { top: 5, right: 25, left: 45, bottom: 45 };
+  const margin = { top: 5, right: 23, left: 45, bottom: 45 };
   const axisXHeight = 20;
   const barWidth = graphDataList[timeType].barWidth;
   const width = svgWidth - margin.left - margin.right;
@@ -137,7 +138,7 @@ export function drawLineGraph(
     .attr("height", (d) => barHeight - barYScale(d.close));
 
   const axisX = axisBottom<Date>(xScale)
-    .ticks(7)
+    .ticks(xTick)
     .tickFormat((d) => formatTime(d.getTime(), dateFormat));
   barGraphGroup
     .append("g")
@@ -259,7 +260,7 @@ export function drawLineGraph(
       tooltipHighLight.attr("transform", `translate(0,${yScale(close)})`);
 
       tooltipTopText.text(
-        `${formatTime(new Date(time * 1000).getTime(), "YYYY-MM-DD, HH:MM")}`
+        `${formatTime(new Date(time * 1000).getTime(), "YYYY-MM-DD, HH:mm")}`
       );
       tooltipBottomText.text(`USDT: ${close}`);
 

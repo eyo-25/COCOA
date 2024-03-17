@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   CoinChartDataType,
   FormattenChartType,
@@ -7,7 +8,7 @@ import {
   chartMenuList,
   chartWidthList,
   koreanCoinName,
-  screenSizeOffset,
+  screenGridOffset,
 } from "./CoinChart.data";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -15,6 +16,19 @@ import { priceFormatter } from "@/common/utils/priceFormatter";
 import { koreanNumberFormatter } from "@/common/utils/koreanNumberFormatter";
 import { calculateChangePercentage } from "@/common/utils/calculateChangePercentage";
 import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
+
+const priceVariants = {
+  normal: {
+    background: "#999",
+  },
+  animate: {
+    opacity: 0,
+    transition: {
+      duration: 1,
+      type: "linear",
+    },
+  },
+};
 
 type Props = {
   chartData: CoinChartDataType[];
@@ -54,7 +68,7 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
   const nameTd = (coin: FormattenChartType) => {
     return (
       <div className="flex items-center ml-2">
-        <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full">
+        <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full mini:w-7 mini:h-7 mobile:w-6 mobile:h-6">
           <img
             data-testid="coin-icon"
             src={import.meta.env.VITE_BASE_URL + coin.ImageUrl}
@@ -80,22 +94,31 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
         <tr
           key={index}
           onClick={() => onClickHandler(coin.Internal)}
-          className="flex w-full py-2 rounded-lg cursor-pointer hover:bg-gray-500/30"
+          className="flex w-full py-2 overflow-hidden rounded-lg cursor-pointer hover:bg-gray-500/30"
         >
           {chartMenuList
-            .slice(0, screenSizeOffset[screenSize])
+            .slice(0, screenGridOffset[screenSize])
             .map(({ type, className }, i) => (
-              <td
-                className={`flex items-center ${
-                  type !== "Name" && "border-r border-gray-500"
+              <motion.td
+                className={`relative overflow-hidden flex items-center ${
+                  type !== "FullName" && "border-r border-gray-500"
                 } ${className}`}
                 style={{
                   width: `${chartWidthList[screenSize][i]}%`,
                 }}
                 key={type}
               >
-                {type === "Name" ? nameTd(coin) : coin?.[type]}
-              </td>
+                {type === "FullName" ? nameTd(coin) : coin?.[type]}
+                {type === "PRICE" && (
+                  <motion.div
+                    variants={priceVariants}
+                    initial="normal"
+                    animate="animate"
+                    className="absolute w-full h-full rounded-md opacity-15"
+                    key={String(coin[type])}
+                  ></motion.div>
+                )}
+              </motion.td>
             ))}
         </tr>
       ))}
