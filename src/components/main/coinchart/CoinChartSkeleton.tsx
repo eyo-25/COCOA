@@ -17,7 +17,10 @@ function CoinChartSkeleton({ screenSize }: Props) {
   return (
     <tbody>
       {Array.from({ length: 25 }, (_, index) => (
-        <tr key={index} className="relative overflow-hidden flex h-[34px] my-2">
+        <tr
+          key={index}
+          className="relative overflow-hidden flex h-[34px] mobile:h-[26px] my-2"
+        >
           <motion.td
             variants={overlayVariants}
             animate="animate"

@@ -10,7 +10,7 @@ const overlayVariants = {
 function CoinBannerSkeleton() {
   return (
     <div className="relative flex flex-col w-full">
-      <div className="relative overflow-hidden h-[35px] mb-5 w-[175px] bg-gray-650/70 rounded-sm">
+      <div className="relative overflow-hidden h-[35px] tablet:h-[32px] mb-5 w-[175px] bg-gray-650/70 rounded-sm">
         <motion.div
           variants={overlayVariants}
           animate="animate"

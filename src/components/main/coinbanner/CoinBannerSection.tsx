@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import CoinTitle from "@/components/ui/CoinTitle";
 import { PlayIcon, StopIcon } from "@/common/assets";
 import CoinBannerSkeleton from "./CoinBannerSkeleton";
+import Button from "@/components/ui/Button";
 
 function CoinBannerSection() {
   const [isBannerStop, setIsBannerStop] = useState<boolean>(false);
@@ -15,7 +16,7 @@ function CoinBannerSection() {
   const [coinIndex, setCoinIndex] = useState<number>(0);
   const [selectedMenuType, setSelectedMenuType] = useState<TimeType>("day");
   const timerId = useRef<NodeJS.Timeout | null>(null);
-  const { data, isLoading } = useCoinTrends("/totalvolfull", 15);
+  const { data } = useCoinTrends("/totalvolfull", 15);
 
   const timerStop = () => {
     if (timerId.current) {
@@ -72,15 +73,15 @@ function CoinBannerSection() {
   }, [coinIndex]);
 
   return (
-    <section className="flex items-center justify-between w-full px-5 mb-1 overflow-hidden bg-gray-700 rounded-md py-7">
-      <button
+    <section className="flex items-center justify-between w-full mt-2 mb-1 overflow-hidden bg-gray-700 rounded-md mini:mt-1 px-7 tablet:px-5 mini:px-4 mobile:px-3 py-7 mini:py-6">
+      <Button
         onClick={onLeftButtonClick}
-        className="w-10 h-10 pr-[2px] bg-gray-800 rounded-md flex-center"
+        className="w-10 h-10 tablet:w-9 tablet:h-9 mini:w-6 mini:h-6 pr-[2px] mini:bg-inherit bg-gray-800 rounded-md flex-center"
       >
         <IoChevronBack className="w-6 h-6 mx-auto" />
-      </button>
+      </Button>
       <div className="flex flex-col relative w-[780px] mx-auto pl-4">
-        {0 < coinList.length && (
+        {0 < coinList.length ? (
           <>
             <div className="relative flex items-center justify-between mb-5">
               <Link
@@ -90,18 +91,18 @@ function CoinBannerSection() {
                 <CoinTitle displayCoin={coinList[coinIndex]} />
               </Link>
               <div className="z-10 flex gap-2">
-                <button className="flex-center pb-[0.5px] w-[29px] h-[29px] bg-gray-800 rounded-full">
-                  <StopIcon
-                    onClick={timerStop}
-                    fill={isBannerStop ? "#E9E9E9" : "#757575"}
-                  />
-                </button>
-                <button className="flex-center pl-1 w-[29px] h-[29px] bg-gray-800 rounded-full">
-                  <PlayIcon
-                    onClick={onBannerStart}
-                    fill={isBannerStop ? "#757575" : "#E9E9E9"}
-                  />
-                </button>
+                <Button
+                  onClick={timerStop}
+                  className="flex-center pb-[0.5px] w-[29px] h-[29px] mini:w-[26px] mini:h-[26px] bg-gray-800 rounded-full"
+                >
+                  <StopIcon fill={isBannerStop ? "#E9E9E9" : "#757575"} />
+                </Button>
+                <Button
+                  onClick={onBannerStart}
+                  className="flex-center pl-1 w-[29px] h-[29px] mini:w-[26px] mini:h-[26px] bg-gray-800 rounded-full"
+                >
+                  <PlayIcon fill={isBannerStop ? "#757575" : "#E9E9E9"} />
+                </Button>
               </div>
             </div>
             <CoinBannerGraph
@@ -113,15 +114,16 @@ function CoinBannerSection() {
               timerReset={timerReset}
             />
           </>
+        ) : (
+          <CoinBannerSkeleton />
         )}
-        {(isLoading || !data) && <CoinBannerSkeleton />}
       </div>
-      <button
+      <Button
         onClick={onRightButtonClick}
-        className="w-10 h-10 bg-gray-800 rounded-md flex-center pl-[2px]"
+        className="w-10 h-10 tablet:w-9 tablet:h-9 mini:w-6 mini:h-6 pr-[2px] mini:bg-inherit bg-gray-800 rounded-md flex-center pl-[2px]"
       >
         <IoChevronForward className="w-6 h-6 mx-auto" />
-      </button>
+      </Button>
     </section>
   );
 }

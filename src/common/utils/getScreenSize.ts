@@ -5,7 +5,7 @@ export const getScreenSize = (width: number): ResponsiveType => {
     return "xs";
   } else if (width < 600) {
     return "sm";
-  } else if (width < 700) {
+  } else if (width < 720) {
     return "base";
   } else if (width < 820) {
     return "lg";

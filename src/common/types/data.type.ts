@@ -78,7 +78,7 @@ export interface CoinChartDataType extends CoininfoType {
 }
 
 export type ChartMenu =
-  | "Name"
+  | "FullName"
   | "PRICE"
   | "OPENHOUR"
   | "OPEN24HOUR"

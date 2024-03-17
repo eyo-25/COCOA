@@ -32,7 +32,7 @@ export const detailMenuList = [
 ];
 
 export const chartMenuList: ChartMenuType[] = [
-  { type: "Name", label: "암호화 화폐", className: "" },
+  { type: "FullName", label: "암호화 화폐", className: "" },
   {
     type: "PRICE",
     label: "가격",
@@ -78,7 +78,7 @@ export const chartSkeletonWidthList: { [Key in ResponsiveType]: number } = {
   sm: 540,
   xs: 460,
 };
-export const screenSizeOffset: { [Key in ResponsiveType]: number } = {
+export const screenGridOffset: { [Key in ResponsiveType]: number } = {
   max: 7,
   xl: 6,
   lg: 5,
@@ -93,6 +93,14 @@ export const chartWidthList: { [Key in ResponsiveType]: number[] } = {
   base: [40, 24, 18, 18],
   sm: [48, 30, 22],
   xs: [65, 35],
+};
+export const newsGridOffset: { [Key in ResponsiveType]: number } = {
+  max: 3,
+  xl: 3,
+  lg: 3,
+  base: 2,
+  sm: 2,
+  xs: 1,
 };
 
 export const timeTypeList: TimeParamsType = {
@@ -163,6 +171,6 @@ export const koreanCoinName: KoreanCoinNameType = {
   FIL: "파일코인",
   XMR: "모네로",
   WLD: "월드코인",
-  FDUSD: "퍼스트 디지털 USD",
+  FDUSD: "퍼스트디지털USD",
   POL: "폴리곤 에코시스템 토큰",
 };

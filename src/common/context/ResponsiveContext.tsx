@@ -5,6 +5,7 @@ import { debounce } from "../utils/debounce";
 
 interface ResponsiveContextProps {
   screenSize: ResponsiveType;
+  screenSizeWidth: number;
 }
 
 export const ResponsiveContext = createContext<
@@ -19,9 +20,11 @@ export function ResponsiveProvider({ children }: Props) {
   const [screenSize, setScreenSize] = useState(
     getScreenSize(window.innerWidth)
   );
+  const [screenSizeWidth, setScreenSizeWidth] = useState(window.innerWidth);
 
   const handleResize = debounce(() => {
     setScreenSize(getScreenSize(window.innerWidth));
+    setScreenSizeWidth(window.innerWidth);
   }, 300);
 
   useEffect(() => {
@@ -33,7 +36,7 @@ export function ResponsiveProvider({ children }: Props) {
   }, []);
 
   return (
-    <ResponsiveContext.Provider value={{ screenSize }}>
+    <ResponsiveContext.Provider value={{ screenSize, screenSizeWidth }}>
       {children}
     </ResponsiveContext.Provider>
   );
