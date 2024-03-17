@@ -100,7 +100,7 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
             .slice(0, screenGridOffset[screenSize])
             .map(({ type, className }, i) => (
               <motion.td
-                className={`relative flex items-center ${
+                className={`relative overflow-hidden flex items-center ${
                   type !== "FullName" && "border-r border-gray-500"
                 } ${className}`}
                 style={{
@@ -114,7 +114,7 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
                     variants={priceVariants}
                     initial="normal"
                     animate="animate"
-                    className="absolute w-full h-full opacity-10"
+                    className="absolute w-full h-full rounded-md opacity-15"
                     key={String(coin[type])}
                   ></motion.div>
                 )}

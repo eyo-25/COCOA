@@ -15,7 +15,7 @@ function DetailContentsSection() {
   };
 
   return (
-    <section>
+    <section className="mb-4">
       <CoinChartMenu
         menuList={detailMenuList}
         selectedMenuId={selectedMenuId}

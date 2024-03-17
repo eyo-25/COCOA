@@ -4,17 +4,15 @@ import { detailChartInfoList, detailChartMenuList } from "../Detail.data";
 import { formatPercentageElement } from "@/common/utils/formatPercentageElement";
 import { motion } from "framer-motion";
 
-const changeVariants = {
+const fadeInVariants = {
   normal: {
-    y: "100%",
+    opacity: 0,
   },
   animate: {
-    y: 0,
+    opacity: 1,
     transition: {
-      duration: 0.5,
-      type: "spring",
-      damping: 20,
-      stiffness: 100,
+      duration: 1,
+      type: "linear",
     },
   },
 };
@@ -29,11 +27,11 @@ function DetailProfileChange({ profileData }: Props) {
       <div className="mb-[25px]">
         <CoinTitle displayCoin={profileData.coinInfo} />
       </div>
-      <ul className="flex mb-8">
+      <ul className="grid grid-cols-3 mb-8 tablet:mb-6 w-[65%] tablet:w-[80%] mini:w-[90%]">
         {detailChartMenuList.map(({ title, info }) => (
           <li
             key={title}
-            className="relative flex flex-col items-center w-[200px]"
+            className="relative flex flex-col items-center w-full"
           >
             <h4 className="text-gray-200">{title}</h4>
             <p className="text-gray-100">{profileData.coinDetail[info]}</p>
@@ -41,21 +39,18 @@ function DetailProfileChange({ profileData }: Props) {
           </li>
         ))}
       </ul>
-      <ul className="flex gap-5">
+      <ul className="grid grid-cols-4 gap-5 w-[80%] mini:w-[90%] mini:gap-3">
         {detailChartInfoList.map(({ title, info }) => (
-          <li
+          <motion.li
+            variants={fadeInVariants}
+            initial="normal"
+            animate="animate"
             key={title}
-            className="flex overflow-hidden justify-between items-center rounded-sm px-5 h-[35px] w-[190px] bg-gray-600"
+            className="flex min-w-[120px] items-center justify-between w-full px-5 overflow-hidden bg-gray-600 rounded-sm py-[6px] tablet:flex-col"
           >
-            <p>{title}</p>
-            <motion.div
-              variants={changeVariants}
-              initial="normal"
-              animate="animate"
-            >
-              {formatPercentageElement(profileData.coinDetail[info])}
-            </motion.div>
-          </li>
+            <p>{title}:</p>
+            {formatPercentageElement(profileData.coinDetail[info])}
+          </motion.li>
         ))}
       </ul>
     </>
