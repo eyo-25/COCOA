@@ -14,6 +14,7 @@ import {
 import { graphDataList } from "../coinchart/CoinChart.data";
 import { formatTime } from "@/common/utils/formatTime";
 import { findClosestDataPoint } from "@/common/utils/findClosestDataPoint";
+import { priceFormatter } from "@/common/utils/priceFormatter";
 
 export function drawLineGraph(
   timeType: TimeType,
@@ -27,7 +28,7 @@ export function drawLineGraph(
   const svg = select(container);
   svg.selectAll("*").remove();
 
-  const margin = { top: 5, right: 23, left: 45, bottom: 45 };
+  const margin = { top: 5, right: 23, left: 60, bottom: 45 };
   const axisXHeight = 20;
   const barWidth = graphDataList[timeType].barWidth;
   const width = svgWidth - margin.left - margin.right;
@@ -88,8 +89,7 @@ export function drawLineGraph(
   const axisY = axisLeft<number>(yScale)
     .ticks(5)
     .tickFormat((d) => {
-      const formattedValue = d % 1 === 0 ? d : d.toFixed(2);
-      return `$ ${formattedValue}`;
+      return priceFormatter(d);
     });
   lineGraphGroup
     .append("g")
@@ -262,7 +262,7 @@ export function drawLineGraph(
       tooltipTopText.text(
         `${formatTime(new Date(time * 1000).getTime(), "YYYY-MM-DD, HH:mm")}`
       );
-      tooltipBottomText.text(`USDT: ${close}`);
+      tooltipBottomText.text(`가격: ${priceFormatter(close)}`);
 
       tooltipGroup.attr(
         "transform",

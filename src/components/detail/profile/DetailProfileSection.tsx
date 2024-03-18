@@ -54,7 +54,12 @@ function DetailProfileSection() {
           <p className="absolute text-sm mini:text-xs right-6 top-5">
             CCCAGG 기준
           </p>
-          {isError && <Error style="pt-[20px]" />}
+          {isError && (
+            <Error
+              style="pt-[20px]"
+              text="요청하신 코인의 데이터가 존재하지 않습니다."
+            />
+          )}
           {isLoading && <DetailProfileSkeleton />}
           {!isLoading && profileData && (
             <DetailProfileChange profileData={profileData} />
