@@ -90,6 +90,7 @@ function DetailContentChart({ coinSymbol }: Props) {
     <div className="relative w-full py-10 overflow-hidden bg-gray-700 rounded-md tablet:py-8 mini:py-6 mobile:py-5 px-11 tablet:px-8 mini:px-6 mobile:px-5">
       <h2 className="mb-5 text-xl font-bold text-gray-100">시세차트</h2>
       <CoinGraphMenu
+        isLoading={isLoading}
         selectedMenuType={selectedMenuType}
         menuClickHandler={graphMenuClickHandler}
       />

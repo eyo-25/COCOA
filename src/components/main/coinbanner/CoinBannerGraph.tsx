@@ -63,6 +63,7 @@ function CoinBannerGraph({
       <CoinGraphMenu
         selectedMenuType={selectedMenuType}
         menuClickHandler={menuClickHandler}
+        isLoading={isLoading}
       />
       {isError && <Error style="pt-[80px]" />}
       {isLoading && <Loading />}
