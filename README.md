@@ -9,7 +9,7 @@
 
 <br/>
 
-- **Development Duration** : `2023.02.04 ~ 2024.03.07`
+- **Development Duration** : `2024.02.04 ~ 2024.03.07`
 - **Expansion** : `2024.03.07 ~`
 - **Developer** : [박재현](https://github.com/eyo-25)
 
