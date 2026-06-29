@@ -5,8 +5,10 @@ import {
 } from "@/common/types/data.type";
 
 export const getChartData = (data: GetCoinDataType): CoinChartDataType[] => {
+  if (!Array.isArray(data.Data)) return [];
+
   const filteredData = data.Data.filter(
-    (item) => typeof item.RAW !== "undefined"
+    (item) => typeof item.RAW?.USD !== "undefined"
   ) as CoinFilterdDataType[];
 
   return filteredData.map((data) => {

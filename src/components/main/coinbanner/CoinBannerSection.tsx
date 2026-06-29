@@ -55,10 +55,23 @@ function CoinBannerSection() {
 
   useEffect(() => {
     if (!data) return;
+
+    if (!Array.isArray(data.Data)) {
+      setCoinIndex(0);
+      setCoinList([]);
+      return;
+    }
+
     const res = data.Data.map((coinData) => {
       const { Id, ImageUrl, Internal, FullName } = coinData.CoinInfo;
       return { Id, ImageUrl, Internal, FullName };
     });
+
+    if (res.length <= 0) {
+      setCoinIndex(0);
+      setCoinList([]);
+      return;
+    }
 
     const randomNumber = randomNumberGenerator(0, res.length - 1);
     setCoinIndex(randomNumber);
