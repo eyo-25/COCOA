@@ -15,7 +15,7 @@ function CoinBannerSection() {
   const [coinList, setCoinList] = useState<CoininfoType[]>([]);
   const [coinIndex, setCoinIndex] = useState<number>(0);
   const [selectedMenuType, setSelectedMenuType] = useState<TimeType>("day");
-  const timerId = useRef<NodeJS.Timeout | null>(null);
+  const timerId = useRef<ReturnType<typeof setInterval> | null>(null);
   const { data } = useCoinTrends("/totalvolfull", 15);
 
   const timerStop = () => {

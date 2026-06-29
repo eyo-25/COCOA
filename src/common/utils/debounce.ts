@@ -4,7 +4,7 @@ type DebounceFunction<T extends unknown[] = []> = (
 ) => (...args: T) => void;
 
 export const debounce: DebounceFunction = (callback, delay) => {
-  let timerId: NodeJS.Timeout;
+  let timerId: ReturnType<typeof setTimeout>;
 
   return (...args) => {
     clearTimeout(timerId);
