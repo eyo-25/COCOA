@@ -4,7 +4,7 @@ import { HttpResponse, http } from "msw";
 import CoinChartSection from "../CoinChartSection";
 import { server } from "@/setupTests";
 
-const COINGECKO_API_URL = "/api/coingecko";
+const COINGECKO_API_URL = "https://api.coingecko.com/api/v3";
 
 test("handler 에러 테스트", async () => {
   server.resetHandlers(

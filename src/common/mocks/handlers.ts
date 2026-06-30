@@ -1,6 +1,6 @@
 import { HttpResponse, http } from "msw";
 
-const COINGECKO_API_URL = "/api/coingecko";
+const COINGECKO_API_URL = "https://api.coingecko.com/api/v3";
 
 export const handlers = [
   http.get(`${COINGECKO_API_URL}/coins/markets`, () => {

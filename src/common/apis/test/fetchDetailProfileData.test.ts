@@ -7,7 +7,9 @@ test("상세 프로필은 CoinGecko coin detail 응답으로 만든다", async (
   const fetcher = vi.fn(async (url: RequestInfo | URL) => {
     const requestUrl = String(url);
 
-    expect(requestUrl).toContain("/api/coingecko/coins/bitcoin");
+    expect(requestUrl).toContain(
+      "https://api.coingecko.com/api/v3/coins/bitcoin"
+    );
     expect(requestUrl).toContain("market_data=true");
     expect(requestUrl).not.toContain("cryptocompare");
     expect(requestUrl).not.toContain("histoday");

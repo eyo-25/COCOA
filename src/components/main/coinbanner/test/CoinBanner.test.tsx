@@ -5,7 +5,7 @@ import { render, waitFor } from "@/common/test-utils/testing-utils";
 import { server } from "@/setupTests";
 import CoinBannerSection from "../CoinBannerSection";
 
-const COINGECKO_API_URL = "/api/coingecko";
+const COINGECKO_API_URL = "https://api.coingecko.com/api/v3";
 
 beforeEach(async () => {
   localStorage.clear();
