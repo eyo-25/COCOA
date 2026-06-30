@@ -1,32 +1,53 @@
 import {
   CoinChartDataType,
-  CoinFilterdDataType,
-  GetCoinDataType,
+  CoinGeckoMarketDataType,
 } from "@/common/types/data.type";
 
-export const getChartData = (data: GetCoinDataType): CoinChartDataType[] => {
-  if (!Array.isArray(data.Data)) return [];
+const getOpenPriceFromPercentage = (
+  currentPrice: number,
+  percentage?: number | null
+) => {
+  if (!percentage) return currentPrice;
+  return currentPrice / (1 + percentage / 100);
+};
 
-  const filteredData = data.Data.filter(
-    (item) => typeof item.RAW?.USD !== "undefined"
-  ) as CoinFilterdDataType[];
+export const getChartData = (data: unknown): CoinChartDataType[] => {
+  if (!Array.isArray(data)) return [];
 
-  return filteredData.map((data) => {
-    const { CoinInfo, RAW } = data;
-    const { Id, FullName, Internal, ImageUrl } = CoinInfo;
-    const { MKTCAP, SUPPLY, PRICE, OPENHOUR, OPEN24HOUR, OPENDAY } = RAW.USD;
+  return (data as CoinGeckoMarketDataType[]).map((coin) => {
+    const {
+      id,
+      symbol,
+      name,
+      image,
+      current_price,
+      market_cap,
+      circulating_supply,
+      price_change_percentage_1h_in_currency,
+      price_change_percentage_24h_in_currency,
+      price_change_percentage_7d_in_currency,
+    } = coin;
 
     return {
-      Id,
-      FullName,
-      Internal,
-      ImageUrl,
-      PRICE,
-      OPENHOUR,
-      OPEN24HOUR,
-      OPENDAY,
-      SUPPLY,
-      MKTCAP,
+      Id: id,
+      FullName: name,
+      Internal: symbol.toUpperCase(),
+      ImageUrl: image,
+      PRICE: current_price ?? 0,
+      OPENHOUR: getOpenPriceFromPercentage(
+        current_price ?? 0,
+        price_change_percentage_1h_in_currency
+      ),
+      OPEN24HOUR: getOpenPriceFromPercentage(
+        current_price ?? 0,
+        price_change_percentage_24h_in_currency
+      ),
+      OPENDAY: getOpenPriceFromPercentage(
+        current_price ?? 0,
+        price_change_percentage_7d_in_currency
+      ),
+      SUPPLY: circulating_supply ?? 0,
+      MKTCAP: market_cap ?? 0,
     };
   });
 };

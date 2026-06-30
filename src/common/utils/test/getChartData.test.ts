@@ -1,59 +1,67 @@
 import { expect, test } from "vitest";
 import { getChartData } from "../getChartData";
-import { GetCoinDataType } from "@/common/types/data.type";
 
-const chartResponse: GetCoinDataType = {
-  Data: [
-    {
-      CoinInfo: {
-        Id: "1182",
-        FullName: "Bitcoin",
-        Internal: "BTC",
-        ImageUrl: "/media/37746251/btc.png",
-      },
-      RAW: {
-        USD: {
-          SUPPLY: 19625931,
-          PRICE: 48281.0189921983,
-          OPENHOUR: 47951.0598816422,
-          OPEN24HOUR: 48253.2787529296,
-          OPENDAY: 48311.1638926435,
-          MKTCAP: 947559947350.5735,
-        },
-      },
-    },
-    {
-      CoinInfo: {
-        Id: "7605",
-        FullName: "Etherium",
-        Internal: "ETH",
-        ImageUrl: "/media/37746238/eth.png",
-      },
-    },
-  ],
-};
+const chartResponse = [
+  {
+    id: "bitcoin",
+    symbol: "btc",
+    name: "Bitcoin",
+    image: "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png",
+    current_price: 59865,
+    market_cap: 1200070344227,
+    circulating_supply: 20049687,
+    price_change_percentage_1h_in_currency: -0.116,
+    price_change_percentage_24h_in_currency: -0.704,
+    price_change_percentage_7d_in_currency: -6.589,
+  },
+  {
+    id: "ethereum",
+    symbol: "eth",
+    name: "Ethereum",
+    image:
+      "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png",
+    current_price: 1572.71,
+    market_cap: 189753517799,
+    circulating_supply: 120683477,
+    price_change_percentage_1h_in_currency: -0.372,
+    price_change_percentage_24h_in_currency: -0.478,
+    price_change_percentage_7d_in_currency: -9.903,
+  },
+];
 
-test("RAW 값이 있는 코인만 차트 데이터로 변환한다", () => {
-  expect(getChartData(chartResponse)).toEqual([
+test("CoinGecko 마켓 응답을 차트 데이터로 변환한다", () => {
+  const result = getChartData(chartResponse);
+
+  expect(result).toMatchObject([
     {
-      Id: "1182",
+      Id: "bitcoin",
       FullName: "Bitcoin",
       Internal: "BTC",
-      ImageUrl: "/media/37746251/btc.png",
-      PRICE: 48281.0189921983,
-      OPENHOUR: 47951.0598816422,
-      OPEN24HOUR: 48253.2787529296,
-      OPENDAY: 48311.1638926435,
-      SUPPLY: 19625931,
-      MKTCAP: 947559947350.5735,
+      ImageUrl:
+        "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png",
+      PRICE: 59865,
+      SUPPLY: 20049687,
+      MKTCAP: 1200070344227,
+    },
+    {
+      Id: "ethereum",
+      FullName: "Ethereum",
+      Internal: "ETH",
+      ImageUrl:
+        "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png",
+      PRICE: 1572.71,
+      SUPPLY: 120683477,
+      MKTCAP: 189753517799,
     },
   ]);
+  expect(result[0].OPENHOUR).toBeCloseTo(59934.52, 2);
+  expect(result[0].OPEN24HOUR).toBeCloseTo(60289.44, 2);
+  expect(result[0].OPENDAY).toBeCloseTo(64087.74, 2);
+  expect(result[1].OPENHOUR).toBeCloseTo(1578.58, 2);
+  expect(result[1].OPEN24HOUR).toBeCloseTo(1580.26, 2);
+  expect(result[1].OPENDAY).toBeCloseTo(1745.57, 2);
 });
 
-test("API 응답 Data가 배열이 아니면 빈 차트 데이터를 반환한다", () => {
-  const invalidResponse = { Data: { Message: "rate limit" } };
-
-  expect(getChartData(invalidResponse as unknown as GetCoinDataType)).toEqual(
-    []
-  );
+test("API 응답이 배열이 아니면 빈 차트 데이터를 반환한다", () => {
+  expect(getChartData({ Message: "rate limit" })).toEqual([]);
 });

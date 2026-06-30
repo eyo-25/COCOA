@@ -16,7 +16,7 @@ function CoinBannerSection() {
   const [coinIndex, setCoinIndex] = useState<number>(0);
   const [selectedMenuType, setSelectedMenuType] = useState<TimeType>("day");
   const timerId = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { data } = useCoinTrends("/totalvolfull", 15);
+  const { data } = useCoinTrends("/mktcapfull", 50);
 
   const timerStop = () => {
     if (timerId.current) {
@@ -56,15 +56,20 @@ function CoinBannerSection() {
   useEffect(() => {
     if (!data) return;
 
-    if (!Array.isArray(data.Data)) {
+    if (!Array.isArray(data)) {
       setCoinIndex(0);
       setCoinList([]);
       return;
     }
 
-    const res = data.Data.map((coinData) => {
-      const { Id, ImageUrl, Internal, FullName } = coinData.CoinInfo;
-      return { Id, ImageUrl, Internal, FullName };
+    const res = data.map((coinData) => {
+      const { id, image, symbol, name } = coinData;
+      return {
+        Id: id,
+        ImageUrl: image,
+        Internal: symbol.toUpperCase(),
+        FullName: name,
+      };
     });
 
     if (res.length <= 0) {
@@ -86,24 +91,24 @@ function CoinBannerSection() {
   }, [coinIndex]);
 
   return (
-    <section className="flex items-center justify-between w-full mt-2 mb-1 overflow-hidden bg-gray-700 rounded-md mini:mt-1 px-7 tablet:px-5 mini:px-4 mobile:px-3 py-7 mini:py-6">
+    <section className="flex overflow-hidden justify-between items-center px-7 py-7 mt-2 mb-1 w-full bg-gray-700 rounded-md mini:mt-1 tablet:px-5 mini:px-4 mobile:px-3 mini:py-6">
       <Button
         onClick={onLeftButtonClick}
         className="w-10 h-10 tablet:w-9 tablet:h-9 mini:w-6 mini:h-6 pr-[2px] mini:bg-inherit bg-gray-800 rounded-md flex-center"
       >
-        <IoChevronBack className="w-6 h-6 mx-auto" />
+        <IoChevronBack className="mx-auto w-6 h-6" />
       </Button>
       <div className="flex flex-col relative w-[780px] mx-auto pl-4">
         {0 < coinList.length ? (
           <>
-            <div className="relative flex items-center justify-between mb-5">
+            <div className="flex relative justify-between items-center mb-5">
               <Link
                 className="z-10 pr-3 rounded-md hover:bg-gray-500/30"
                 to={`/assets/${coinList[coinIndex].Internal}`}
               >
                 <CoinTitle displayCoin={coinList[coinIndex]} />
               </Link>
-              <div className="z-10 flex gap-2">
+              <div className="flex z-10 gap-2">
                 <Button
                   onClick={timerStop}
                   className="flex-center pb-[0.5px] w-[29px] h-[29px] mini:w-[26px] mini:h-[26px] bg-gray-800 rounded-full"
@@ -135,7 +140,7 @@ function CoinBannerSection() {
         onClick={onRightButtonClick}
         className="w-10 h-10 tablet:w-9 tablet:h-9 mini:w-6 mini:h-6 pr-[2px] mini:bg-inherit bg-gray-800 rounded-md flex-center pl-[2px]"
       >
-        <IoChevronForward className="w-6 h-6 mx-auto" />
+        <IoChevronForward className="mx-auto w-6 h-6" />
       </Button>
     </section>
   );

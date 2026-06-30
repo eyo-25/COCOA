@@ -13,5 +13,5 @@ test("비동기 요청 테스트", async () => {
 
   // 이미지 대체 텍스트 확인
   const altTexts = coinImage.map((item) => item.alt);
-  expect(altTexts).toEqual(["Bitcoin", "Etherium"]);
+  expect(altTexts).toEqual(["Bitcoin", "Ethereum"]);
 });

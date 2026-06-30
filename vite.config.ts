@@ -25,6 +25,13 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: {
+      "/api/coingecko": {
+        target: "https://api.coingecko.com/api/v3",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/coingecko/, ""),
+      },
+    },
   },
   test: {
     globals: true,

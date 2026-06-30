@@ -27,6 +27,7 @@ function CoinBannerGraph({
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const svgRef = useRef(null);
+  const requestIdRef = useRef(0);
 
   const menuClickHandler = async (timeType: TimeType) => {
     if (selectedMenuType === timeType || isLoading) return;
@@ -37,17 +38,24 @@ function CoinBannerGraph({
   };
 
   const getOHLCVDData = async () => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
     setIsLoading(true);
+    setIsError(false);
 
     try {
-      const data = await fetchOHLCVData(selectedMenuType, displayCoin.Internal);
+      const data = await fetchOHLCVData(selectedMenuType, displayCoin.Id);
+
+      if (requestId !== requestIdRef.current) return;
 
       if (svgRef.current) {
         drawLineGraph(selectedMenuType, svgRef.current, 765, 220, data);
       }
     } catch (error) {
+      if (requestId !== requestIdRef.current) return;
       setIsError(true);
     } finally {
+      if (requestId !== requestIdRef.current) return;
       setIsLoading(false);
     }
   };

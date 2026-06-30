@@ -6,6 +6,10 @@ type Props = {
 };
 
 export default function CoinTitle({ displayCoin }: Props) {
+  const imageUrl = displayCoin.ImageUrl.startsWith("http")
+    ? displayCoin.ImageUrl
+    : import.meta.env.VITE_BASE_URL + displayCoin.ImageUrl;
+
   return (
     <div className="flex items-center">
       <div
@@ -15,7 +19,7 @@ export default function CoinTitle({ displayCoin }: Props) {
           data-testid="coin-icon"
           alt={displayCoin.FullName}
           className="w-full h-full scale-110"
-          src={`${import.meta.env.VITE_BASE_URL}${displayCoin.ImageUrl}`}
+          src={imageUrl}
         />
       </div>
       <h2 className="mr-2 text-xl font-bold text-gray-100 tablet:text-lg">

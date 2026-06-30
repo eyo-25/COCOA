@@ -66,12 +66,16 @@ function CoinChartBoard({ chartData, screenSize }: Props) {
   }, [chartData]);
 
   const nameTd = (coin: FormattenChartType) => {
+    const imageUrl = coin.ImageUrl.startsWith("http")
+      ? coin.ImageUrl
+      : import.meta.env.VITE_BASE_URL + coin.ImageUrl;
+
     return (
       <div className="flex items-center ml-2">
         <div className="flex w-8 h-8 mr-2 overflow-hidden rounded-full mini:w-7 mini:h-7 mobile:w-6 mobile:h-6">
           <img
             data-testid="coin-icon"
-            src={import.meta.env.VITE_BASE_URL + coin.ImageUrl}
+            src={imageUrl}
             alt={coin.FullName}
           />
         </div>

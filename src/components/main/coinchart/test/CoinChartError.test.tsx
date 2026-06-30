@@ -4,9 +4,11 @@ import { HttpResponse, http } from "msw";
 import CoinChartSection from "../CoinChartSection";
 import { server } from "@/setupTests";
 
+const COINGECKO_API_URL = "/api/coingecko";
+
 test("handler 에러 테스트", async () => {
   server.resetHandlers(
-    http.get(`${import.meta.env.VITE_API_URL}/data/top/:coinTrends`, () => {
+    http.get(`${COINGECKO_API_URL}/coins/markets`, () => {
       return new HttpResponse(null, { status: 500 });
     })
   );
@@ -23,13 +25,8 @@ test("handler 에러 테스트", async () => {
 
 test("빈 데이터 테스트", async () => {
   server.resetHandlers(
-    http.get(`${import.meta.env.VITE_API_URL}/data/top/:coinTrends`, () => {
-      return HttpResponse.json(
-        {
-          Data: [],
-        },
-        { status: 200 }
-      );
+    http.get(`${COINGECKO_API_URL}/coins/markets`, () => {
+      return HttpResponse.json([], { status: 200 });
     })
   );
 

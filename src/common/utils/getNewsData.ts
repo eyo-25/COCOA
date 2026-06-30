@@ -1,6 +1,7 @@
 import { NewsDataType, NewsListType } from "../types/data.type";
 
 export const getNewsData = (data: NewsDataType): NewsListType[] => {
+  if (!Array.isArray(data.Data)) return [];
   if (data.Data.length <= 0) return [];
 
   const formattedData = data.Data.map((item) => {

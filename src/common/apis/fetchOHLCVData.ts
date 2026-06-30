@@ -1,33 +1,37 @@
-import { timeTypeList } from "@/components/main/coinchart/CoinChart.data";
-import { OHLCVDataType, TimeType } from "../types/data.type";
-import { fetchAxios } from "../utils/fetchAxios";
+import { CoinGeckoMarketChartDataType, TimeType } from "../types/data.type";
+import { cachedJsonFetch } from "../utils/cachedJsonFetch";
+import {
+  COINGECKO_API_URL,
+  getCoinGeckoApiKeyParam,
+  getCoinGeckoId,
+} from "./coinGecko";
+
+const MARKET_CHART_CACHE_TTL_MS = 1000 * 60 * 5;
+
+const timeTypeToDays: Record<TimeType, string> = {
+  hour: "1",
+  day: "1",
+  week: "7",
+  month: "30",
+};
 
 export const fetchOHLCVData = async (
   timeType: TimeType,
-  coinInternal: string
+  coinIdOrSymbol: string
 ) => {
-  const { type, limit, aggregate } = timeTypeList[timeType];
+  const coinId = getCoinGeckoId(coinIdOrSymbol);
+  const days = timeTypeToDays[timeType];
 
-  const res = await fetchAxios<OHLCVDataType>(
-    `${
-      import.meta.env.VITE_API_URL +
-      "/data/v2/" +
-      type +
-      "?fsym=" +
-      coinInternal +
-      "&tsym=USD&limit=" +
-      limit +
-      "&aggregate=" +
-      aggregate +
-      "&api_key=" +
-      import.meta.env.VITE_API_KEY
-    }`
+  const res = await cachedJsonFetch<CoinGeckoMarketChartDataType>(
+    `${COINGECKO_API_URL}/coins/${coinId}/market_chart?vs_currency=usd&days=${days}${getCoinGeckoApiKeyParam()}`,
+    {
+      cacheKey: `coin-gecko:market-chart:${coinId}:${days}`,
+      ttlMs: MARKET_CHART_CACHE_TTL_MS,
+    }
   );
 
-  const filteredData = res.Data.Data.map((item) => {
-    const { close, time } = item;
-    return { close, time };
-  });
-
-  return filteredData;
+  return res.prices.map(([time, close]) => ({
+    time: Math.floor(time / 1000),
+    close,
+  }));
 };

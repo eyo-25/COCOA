@@ -12,11 +12,7 @@ export const menuList = [
     url: "/mktcapfull",
   },
   {
-    title: "인기거래 목록",
-    url: "/totaltoptiervolfull",
-  },
-  {
-    title: "최근 거래량",
+    title: "거래량",
     url: "/totalvolfull",
   },
 ];
