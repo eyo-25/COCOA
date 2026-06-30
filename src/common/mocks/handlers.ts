@@ -1,65 +1,79 @@
 import { HttpResponse, http } from "msw";
 
+const COINGECKO_API_URL = "/api/coingecko";
+
 export const handlers = [
-  http.get(`${import.meta.env.VITE_API_URL}/data/top/:coinTrends`, () => {
+  http.get(`${COINGECKO_API_URL}/coins/markets`, () => {
+    return HttpResponse.json(
+      [
+        {
+          id: "bitcoin",
+          symbol: "btc",
+          name: "Bitcoin",
+          image:
+            "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png",
+          current_price: 59865,
+          market_cap: 1200070344227,
+          circulating_supply: 20049687,
+          price_change_percentage_1h_in_currency: -0.116,
+          price_change_percentage_24h_in_currency: -0.704,
+          price_change_percentage_7d_in_currency: -6.589,
+        },
+        {
+          id: "ethereum",
+          symbol: "eth",
+          name: "Ethereum",
+          image:
+            "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png",
+          current_price: 1572.71,
+          market_cap: 189753517799,
+          circulating_supply: 120683477,
+          price_change_percentage_1h_in_currency: -0.372,
+          price_change_percentage_24h_in_currency: -0.478,
+          price_change_percentage_7d_in_currency: -9.903,
+        },
+      ],
+      { status: 200 }
+    );
+  }),
+  http.get(`${COINGECKO_API_URL}/coins/:coinId/market_chart`, () => {
     return HttpResponse.json(
       {
-        Data: [
-          {
-            CoinInfo: {
-              Id: "1182",
-              FullName: "Bitcoin",
-              Internal: "BTC",
-              ImageUrl: "/media/37746251/btc.png",
-            },
-            RAW: {
-              USD: {
-                SUPPLY: 19625931,
-                PRICE: 48281.0189921983,
-                OPENHOUR: 47951.0598816422,
-                OPEN24HOUR: 48253.2787529296,
-                OPENDAY: 48311.1638926435,
-                MKTCAP: 947559947350.5735,
-              },
-            },
-          },
-          {
-            CoinInfo: {
-              Id: "7605",
-              FullName: "Etherium",
-              Internal: "ETH",
-              ImageUrl: "/media/37746238/eth.png",
-            },
-            RAW: {
-              USD: {
-                SUPPLY: 120170002.44513807,
-                PRICE: 48281.0189921983,
-                OPENHOUR: 2487.16495651191,
-                OPEN24HOUR: 2514.94516668726,
-                OPENDAY: 2507.90898159167,
-                MKTCAP: 300150784470.909,
-              },
-            },
-          },
+        prices: [
+          [1707912000000, 51593.01],
+          [1707915600000, 51838.27],
         ],
       },
       { status: 200 }
     );
   }),
-  http.get(`${import.meta.env.VITE_API_URL}/data/v2/:timeType`, () => {
+  http.get(`${COINGECKO_API_URL}/coins/:coinId`, ({ params }) => {
+    const coinId = String(params.coinId);
+    const symbol = coinId === "ethereum" ? "eth" : "btc";
+    const name = coinId === "ethereum" ? "Ethereum" : "Bitcoin";
+
     return HttpResponse.json(
       {
-        Data: {
-          Data: [
-            {
-              time: 1707912000,
-              close: 51593.01,
-            },
-            {
-              time: 1707915600,
-              close: 51838.27,
-            },
-          ],
+        id: coinId,
+        symbol,
+        name,
+        image: {
+          large:
+            coinId === "ethereum"
+              ? "https://coin-images.coingecko.com/coins/images/279/large/ethereum.png"
+              : "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png",
+        },
+        market_data: {
+          current_price: { usd: coinId === "ethereum" ? 1572.71 : 59865 },
+          market_cap: {
+            usd: coinId === "ethereum" ? 189753517799 : 1200070344227,
+          },
+          circulating_supply:
+            coinId === "ethereum" ? 120683477 : 20049687,
+          price_change_percentage_1h_in_currency: { usd: -0.116 },
+          price_change_percentage_24h_in_currency: { usd: -0.704 },
+          price_change_percentage_7d_in_currency: { usd: -6.589 },
+          price_change_percentage_30d_in_currency: { usd: 12.345 },
         },
       },
       { status: 200 }

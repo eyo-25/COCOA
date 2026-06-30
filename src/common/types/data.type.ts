@@ -76,6 +76,49 @@ export interface CoinChartDataType extends CoininfoType {
   OPEN24HOUR: number;
   OPENDAY: number;
 }
+export interface CoinGeckoMarketDataType {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  current_price: number | null;
+  market_cap: number | null;
+  circulating_supply: number | null;
+  price_change_percentage_1h_in_currency?: number | null;
+  price_change_percentage_24h_in_currency?: number | null;
+  price_change_percentage_7d_in_currency?: number | null;
+}
+export interface CoinGeckoCoinDetailDataType {
+  id: string;
+  symbol: string;
+  name: string;
+  image: {
+    large?: string;
+    small?: string;
+    thumb?: string;
+  };
+  market_data: {
+    current_price: {
+      usd?: number;
+    };
+    market_cap: {
+      usd?: number;
+    };
+    circulating_supply?: number | null;
+    price_change_percentage_1h_in_currency?: {
+      usd?: number | null;
+    };
+    price_change_percentage_24h_in_currency?: {
+      usd?: number | null;
+    };
+    price_change_percentage_7d_in_currency?: {
+      usd?: number | null;
+    };
+    price_change_percentage_30d_in_currency?: {
+      usd?: number | null;
+    };
+  };
+}
 
 export type ChartMenu =
   | "FullName"
@@ -136,6 +179,9 @@ export interface OHLCVDataType {
   Data: {
     Data: OHLCVType[];
   };
+}
+export interface CoinGeckoMarketChartDataType {
+  prices: [number, number][];
 }
 
 export type KoreanCoinNameType = {
