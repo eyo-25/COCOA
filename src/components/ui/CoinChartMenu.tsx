@@ -1,14 +1,23 @@
+import { ReactNode } from "react";
 import { MenuType } from "@/common/types/data.type";
 
 type Props = {
   selectedMenuId: number;
   menuClickHandler: (id: number) => void;
   menuList: MenuType[];
+  rightLabel?: string;
+  rightContent?: ReactNode;
 };
 
-function CoinChartMenu({ menuList, selectedMenuId, menuClickHandler }: Props) {
+function CoinChartMenu({
+  menuList,
+  selectedMenuId,
+  menuClickHandler,
+  rightLabel,
+  rightContent,
+}: Props) {
   return (
-    <div className="flex justify-between my-5 tablet:my-[18px] mini:my-4 mobile:my-3">
+    <div className="flex items-center justify-between gap-3 my-5 tablet:my-[18px] mini:my-4 mobile:my-3">
       <ul className="flex flex-wrap gap-3">
         {menuList.map(({ title }, i) => (
           <li key={title + i}>
@@ -23,6 +32,12 @@ function CoinChartMenu({ menuList, selectedMenuId, menuClickHandler }: Props) {
           </li>
         ))}
       </ul>
+      {rightContent}
+      {!rightContent && rightLabel && (
+        <p className="text-sm text-gray-300 shrink-0 mobile:text-xs">
+          {rightLabel}
+        </p>
+      )}
     </div>
   );
 }

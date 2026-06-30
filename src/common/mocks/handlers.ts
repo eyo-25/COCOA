@@ -1,8 +1,12 @@
 import { HttpResponse, http } from "msw";
 
 const COINGECKO_API_URL = "https://api.coingecko.com/api/v3";
+const BINANCE_API_URL = "https://api.binance.com/api/v3";
 
 export const handlers = [
+  http.get(`${BINANCE_API_URL}/exchangeInfo`, () => {
+    return HttpResponse.json({ symbols: [] }, { status: 200 });
+  }),
   http.get(`${COINGECKO_API_URL}/coins/markets`, () => {
     return HttpResponse.json(
       [
